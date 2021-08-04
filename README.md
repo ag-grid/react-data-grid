@@ -4,7 +4,7 @@
 
 # React Data Grid Examples
 
-React Data Grid Examples used on the ag-grid blog.
+React Data Grid Examples used on the [AG Grid blog](https://blog.ag-grid.com/).
 
 See the Posts:
 
@@ -14,49 +14,64 @@ See the Posts:
     - [code in customization-demo-classes](customization-demo-classes)
 
 
+Feel free to [clone, fork or download this repo](https://github.com/ag-grid/react-data-grid) to use as a base for learning about [AG Grid](https://ag-grid.com/).
+## More Examples
+
+In addition to this repo, we also have a repo used to support our testing as well as provide example use cases:
+
+The [React Data Grid Example repo](https://github.com/ag-grid/ag-grid-react-example) has three different project samples.
+
+- A Stock Trading Dashboard simulator.
+- An interactive feature example.
+- Demonstration of a 'large' grid. (676 columns by 1000 rows)
+
+[read more about the repo here](https://blog.ag-grid.com/react-data-grid-example-projects/)
+
+
+We also maintain a [Showcase page](https://blog.ag-grid.com/showcase/) which lists public live examples of AG Grid usage.
+
+
 ## About AG Grid
 
 ag-Grid is a fully-featured and highly customizable JavaScript data grid.
-It delivers [outstanding performance](https://www.ag-grid.com/example.php), has no 3rd party dependencies and integrates with React as React Component. Here's how our grid looks like with multiple filters and grouping enabled:
+It delivers [outstanding performance](https://www.ag-grid.com/example.php), has no 3rd party dependencies and integrates with React. Here's how our grid looks like with multiple filters and grouping enabled:
 
 ![alt text](github-grid-demo.jpg "Grid Demo Example")
 
 
-Features
---------------
+A React Data Grid is different from a React Grid or a React Table.
 
-Besides the standard set of features you'd expect from any grid:
+*   Grid provides functionality for page layout vs.
+*   Data Table which provides data rendering and some interactivity vs.
+*   Data Grid which provides a data-driven spreadsheet-like level of interactivity.
 
-* Column Interactions (resize, reorder, and pin columns)
-* Pagination
-* Sorting
-* Row Selection
+A **React Grid** refers typically to a layout control to create a responsive grid layout to organise child components.
 
-Here are some of the features that make ag-Grid stand out:
+  
+A **React Table**, **React Data Table** or **React Data Grid** refers to a component that can render rows and columns of data and allow the user to interact with the data, e.g. sorting and filtering data, exporting data, and in-cell editing.
 
-* Grouping / Aggregation*
-* Custom Filtering
-* In-place Cell Editing
-* Records Lazy Loading *
-* Server-Side Records Operations *
-* Live Stream Updates
-* Hierarchical Data Support & Tree View *
-* Customizable Appearance
-* Customizable Cell Contents
-* Excel-like Pivoting *
-* State Persistence
-* Keyboard navigation
-* Data Export to CSV
-* Data Export to Excel *
-* Row Reordering
-* Copy / Paste 
-* Column Spanning
-* Pinned Rows
-* Full Width Rows
+_AG Grid is a [React Data Grid](https://www.ag-grid.com/react-grid/) for data-driven tabular rendering. Configuration based to offer a rich user experience out of the box with minimal programming. AG Grid can be extended to cover project specific requirements and can also be used with Angular, Vue and JavaScript._
 
-\* The features marked with an asterisk are available in the [enterprise version](https://www.ag-grid.com/license-pricing.php) only.
+Read more about the [differences between a Data Grid and a Table here](https://blog.ag-grid.com/react-data-grid-vs-react-data-table-vs-react-grid/).
 
-Check out [developers documentation](https://ag-grid.com/react-grid/) for a complete list of features or visit [our official docs](https://www.ag-grid.com/features-overview) for tutorials and feature demos.
+*   Grid
+    *   Helps with page layout.
+*   Data Table
+    *   Render data in an HTML table.
+    *   Support for coding user interaction features.
+    *   Enabling features requires template changes and event handling code.
+    *   Some features require additional libraries and programmer effort, e.g., row virtualisation for performance, scrollbars for usability.
+    *   Template Driven, the template controls the rendering.
+*   Data Grid
+    *   Renders data in tabular form with the underlying DOM designed for performance.
+    *   Enable user interaction with configuration.
+    *   Configuration over coding for standard use-cases.
+    *   Feature-rich out of the box without adding dependencies.
+    *   Data-Driven, once configured, add data and let the Data Grid do the work.
+
+  
+Both Data Tables and Data Grids offer teams the ability to customise with additional features and work with external libraries. With a Data Grid, you should require fewer external libraries and dependencies because the Data Grid is designed to do more heavy lifting out of the box.
+
 
 License
 ------------------
