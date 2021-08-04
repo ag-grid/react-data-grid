@@ -1,0 +1,44 @@
+{
+  "name": "ag-grid-react-integration-demo",
+  "version": "1.0.0",
+  "description": "It's a 5 minute get-started guide with examples that you can copy/paste and hit the ground running. Once the basic setup is ready, I'll show you a few features and corresponding configuration options.",
+  "homepage": "https://react-grid.ag-grid.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-datagrid/integration-demo.git"
+  },
+  "author": "Max Koretskyi <max.koretskyi@ag-grid.com>",
+  "license": "MIT",
+  "keywords": [
+    "react-component",
+    "grid",
+    "data",
+    "table",
+    "js"
+  ],
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "ag-grid-community": "^25.3.0",
+    "ag-grid-react": "^25.3.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
