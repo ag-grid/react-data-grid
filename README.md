@@ -9,9 +9,9 @@ React Data Grid Examples used on the ag-grid blog.
 See the Posts:
 
 - [Get Started with React Data Grid in 5 minutes](https://blog.ag-grid.com/react-get-started-with-react-grid-in-5-minutes/)
-    - [code in integration-demo-classes])(/integration-demo-classes)
+    - [code in integration-demo-classes](integration-demo-classes)
 - [Create React Components for editing, filters and rendering of React data grid cells](https://blog.ag-grid.com/learn-to-customize-react-grid-in-less-than-10-minutes/)
-    - [code in customization-demo-classes])(/customization-demo-classes)
+    - [code in customization-demo-classes])(customization-demo-classes)
 
 
 ## About AG Grid
