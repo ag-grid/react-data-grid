@@ -19,7 +19,7 @@ See the Posts:
 ag-Grid is a fully-featured and highly customizable JavaScript data grid.
 It delivers [outstanding performance](https://www.ag-grid.com/example.php), has no 3rd party dependencies and integrates with React as React Component. Here's how our grid looks like with multiple filters and grouping enabled:
 
-![alt text](./github-grid-demo.jpg "Grid Demo Example")
+![alt text](github-grid-demo.jpg "Grid Demo Example")
 
 
 Features
