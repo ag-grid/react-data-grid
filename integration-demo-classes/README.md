@@ -11,65 +11,73 @@ This demo code supports the blog post:
 
 Use the setup instructions below or go through [a 5-minute-quickstart guide](https://www.ag-grid.com/react-getting-started).
 
-#### Install dependencies
+### To Run The Demo
 
-    $ npm install
-    $ npm install --save ag-grid-community ag-grid-react
+```shell
+$ npm install
+$ npm start
+```
 
-To run the demo:
+### To Create the Example from Scratch
 
-    $ npm start
+Create the basic app structure with `create-react-app`
+
+```
+npx create-react-app my-app
+cd my-app
+npm start
+```
+
+Add AG Grid and AG Grid React into your project.
+
+```
+npm install --save ag-grid-community ag-grid-react
+```
 
 #### Import the grid and styles
 
-    import {AgGridReact} from 'ag-grid-react';
-    
-    import "ag-grid-community/dist/styles/ag-grid.css";
-  	import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+```
+import {AgGridColumn, AgGridReact} from 'ag-grid-react';
 
-### Set the grid's configuration in a parent component
-	class App extends Component {
-		constructor(props) {
-			super(props);
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+```	  
 
-			this.state = {
-				columnDefs: [
-					{headerName: "Make", field: "make"},
-					{headerName: "Model", field: "model"},
-					{headerName: "Price", field: "price"}
+#### Set the grid's configuration in a parent component
+```javascript
+class App extends Component {
 
-				],
-				rowData: [
-					{make: "Toyota", model: "Celica", price: 35000},
-					{make: "Ford", model: "Mondeo", price: 32000},
-					{make: "Porsche", model: "Boxter", price: 72000}
-				]
-			}
-		}
-		...
-	}
+	constructor(props) {
+        super(props);
 
-### Render the grid as the `AgGridReact` child component
+        this.state = {
+            rowData: [
+                {make: "Toyota", model: "Celica", price: 35000},
+                {make: "Ford", model: "Mondeo", price: 32000},
+                {make: "Porsche", model: "Boxter", price: 72000}
+            ]
+        }
+    }
 
-	class App extends Component {
-		constructor(props) {...}
+    render() {
+        return (
+            <div
+                className="ag-theme-balham"
+                style={{ height: '200px', width: '600px' }}
+            >
+                <AgGridReact
+                    rowData={this.state.rowData}>
+                    <AgGridColumn field="make"></AgGridColumn>
+                    <AgGridColumn field="model"></AgGridColumn>
+                    <AgGridColumn field="price"></AgGridColumn>
+                </AgGridReact>
+            </div>
+        );
+    }
+}
+```
 
-		render() {
-			return (
-				<div
-					className="ag-theme-balham"
-					style={{
-						height: '500px',
-						width: '600px'
-					}}
-				>
-					<AgGridReact
-						columnDefs={this.state.columnDefs}
-						rowData={this.state.rowData}>
-					</AgGridReact>
-				</div>
-			);
-		}
-	}
+This renders the grid as the `AgGridReact` child component.
+
 
 
