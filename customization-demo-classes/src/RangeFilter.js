@@ -55,10 +55,12 @@ export class RangeFilter extends Component {
 
     render() {
         return (
+            <div>
             <form onSubmit={this.onSubmit}>
                 <input name="filter" ref={this.input} defaultValue={this.state.filter}/>
                 <button>Apply</button>
             </form>
+            </div>
         );
     }
 }

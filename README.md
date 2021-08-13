@@ -8,10 +8,12 @@ React Data Grid Examples used on the [AG Grid blog](https://blog.ag-grid.com/).
 
 See the Posts:
 
-- [Get Started with React Data Grid in 5 minutes](https://blog.ag-grid.com/react-get-started-with-react-grid-in-5-minutes/)
-    - [code in integration-demo-classes](integration-demo-classes)
+- [Get Started with React Data Grid with Classes in 5 minutes](https://blog.ag-grid.com/react-get-started-with-react-grid-in-5-minutes/)
+    - [Summary and code in integration-demo-classes](integration-demo-classes)
 - [Create React Components for editing, filters and rendering of React data grid cells](https://blog.ag-grid.com/learn-to-customize-react-grid-in-less-than-10-minutes/)
     - [code in customization-demo-classes](customization-demo-classes)
+- [Get Started with React Data Grid with Hooks in 5 minutes]
+    - [Summary and code in integration-demo-classes](getting-started-5-mins-hooks)    
 
 
 Feel free to [clone, fork or download this repo](https://github.com/ag-grid/react-data-grid) to use as a base for learning about [AG Grid](https://ag-grid.com/).
@@ -33,7 +35,7 @@ We also maintain a [Showcase page](https://blog.ag-grid.com/showcase/) which lis
 
 ## About AG Grid
 
-ag-Grid is a fully-featured and highly customizable JavaScript data grid.
+AG Grid is a fully-featured and highly customizable [React Data Grid](https://www.ag-grid.com/react-grid/).
 It delivers [outstanding performance](https://www.ag-grid.com/example.php), has no 3rd party dependencies and integrates with React. Here's how our grid looks like with multiple filters and grouping enabled:
 
 ![alt text](github-grid-demo.jpg "Grid Demo Example")

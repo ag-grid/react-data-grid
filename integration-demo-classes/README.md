@@ -81,3 +81,26 @@ This renders the grid as the `AgGridReact` child component.
 
 
 
+### Loading Data From a Server
+
+To load the data from a server, change the constructor so that `rowData` is an empty array. This will cause the Data Grid to render with the 'loading' icon.
+
+```
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            rowData: []
+        }
+    }
+```
+
+Then when the component has mounted, trigger a re-render by setting the state to data read from a server.
+
+```
+    componentDidMount() {
+        fetch('https://www.ag-grid.com/example-assets/row-data.json')
+            .then(result => result.json())
+            .then(rowData => this.setState({rowData}))
+    }
+```
