@@ -47,13 +47,9 @@ export function CustomGrid() {
                     rangeFilter: RangeFilter
                 }} 
                 
-
                 rowData={rowData}
                 columnDefs={colDefs}>
             </AgGridReact>
         </div>
     );
 }
-
-//                    
-//'rangeFilter': RangeFilter

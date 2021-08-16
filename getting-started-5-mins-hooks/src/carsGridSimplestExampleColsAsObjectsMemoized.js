@@ -13,6 +13,7 @@ export function CarsGrid() {
         {make: "Porsche", model: "Boxter", price: 72000}
     ]);
 
+    // if we want fixed data sets then memoize them
     const colDefs = useMemo( ()=> [
     	{field: 'make'},
     	{field: 'model'},

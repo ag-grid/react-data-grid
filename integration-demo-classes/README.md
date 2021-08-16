@@ -104,3 +104,41 @@ Then when the component has mounted, trigger a re-render by setting the state to
             .then(rowData => this.setState({rowData}))
     }
 ```
+
+## Optimising Configuration for Flexibility
+
+Currently our grid has the column definitions defined declartively:
+
+```
+    <AgGridColumn field="make"></AgGridColumn>
+    <AgGridColumn field="model"></AgGridColumn>
+    <AgGridColumn field="price" editable={true}></AgGridColumn>
+```
+
+This reduces our ability to customise the grid at run time.
+
+We would be better off representing the column definitions as objects via state.
+
+```
+        this.state = {
+            rowData: [],
+            colDefs: [
+                {field: 'make'},
+                {field: 'model'},
+                {field: 'price', editable: 'true'},
+            ]
+        }
+```
+
+And amending my grid to use the state.
+
+```
+   <AgGridReact
+        defaultColDef={{sortable: true, filter: true }}
+        pagination={true}
+        rowData={rowData}
+        columnDefs={colDefs}>
+   </AgGridReact>
+```
+
+This supports customization at run-time with the grid automatically re-rendering due to the state change.

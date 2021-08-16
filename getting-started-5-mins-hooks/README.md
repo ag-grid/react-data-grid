@@ -64,11 +64,12 @@ Loading Data from a server on first render can be done with an effect:
 ```
 
 ## Considerations When Using AG Grid with React
+
 ### Make ColumnDefs Objects
 
 The previous example uses declarative column definitions. Because these are baked into the JSX we will find it difficult to change the grid at runtime.
 
-By making the column definitions objects, we can change them as necessary and the grid component will re-render.
+By making the column definitions objects and part of the state, we can change them as necessary and the grid component will re-render.
 
 ```
 const InitialRowData = [
@@ -100,7 +101,7 @@ export function CarsGrid() {
 };
 ```
 
-With the above code I can amend the columns in the grid programmatically by changing the state.
+With the above code I can amend the columns in the grid programmatically by changing the state. I've added it into a `useEffect` just to add a delay to make the change in grid more obvious.
 
 e.g.
 

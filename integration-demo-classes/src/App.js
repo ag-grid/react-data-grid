@@ -10,7 +10,12 @@ class App extends Component {
         super(props);
 
         this.state = {
-            rowData: []
+            rowData: [],
+            colDefs: [
+                {field: 'make'},
+                {field: 'model'},
+                {field: 'price', editable: 'true'},
+            ]
         }
     }
 
@@ -29,11 +34,17 @@ class App extends Component {
                 <AgGridReact
                     pagination={true}
                     defaultColDef={{sortable: true, filter: true }}
-                    rowData={this.state.rowData}>
+                    rowData={this.state.rowData}                    
+                    columnDefs={this.state.colDefs}
+                    >
+
+                {/* 
+                     Recommended: use objects rather than declarative column definitions
 
                     <AgGridColumn field="make"></AgGridColumn>
                     <AgGridColumn field="model"></AgGridColumn>
                     <AgGridColumn field="price" editable= {true}></AgGridColumn>
+                    */}
                     
                 </AgGridReact>
             </div>
