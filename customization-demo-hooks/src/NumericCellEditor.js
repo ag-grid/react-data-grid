@@ -1,4 +1,4 @@
-import React, {forwardRef, memo, useState, useRef, useEffect, useCallback, useImperativeHandle} from 'react';
+import React, {forwardRef, useState, useRef, useEffect, useCallback, useImperativeHandle} from 'react';
 
 export const NumericCellEditor = forwardRef((props, ref) => {
 
@@ -37,6 +37,5 @@ export const NumericCellEditor = forwardRef((props, ref) => {
             ref={refInput} 
         />
     );  
-
 });
 

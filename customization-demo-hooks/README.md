@@ -1,70 +1,388 @@
-# Getting Started with Create React App
+## To Run The Demo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+```shell
+$ npm install
+$ npm start
+```
 
-## Available Scripts
+## To Create the Example from Scratch
 
-In the project directory, you can run:
+Create the basic app structure with `create-react-app`
 
-### `npm start`
+```
+npx create-react-app customization-demo-hooks
+cd customization-demo-hooks
+npm start
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Add AG Grid and AG Grid React into your project.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
+npm install --save ag-grid-community ag-grid-react
+```
 
-### `npm test`
+## Start Point
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The initial starting point was as follows in `CustomizedGrid.js`
 
-### `npm run build`
+```javascript
+export function CustomGrid() {
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    const [rowData, setRowData] = useState([]);
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    const [colDefs, setColDefs] = useState(
+        [
+            {field:"make"},
+            {field:"model"},
+            {field:"price", editable:true}
+        ]);
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    useEffect(() => {
+        fetch('https://www.ag-grid.com/example-assets/row-data.json')
+            .then(result => result.json())
+            .then(rowData => setRowData(rowData))
+    }, []);
 
-### `npm run eject`
+    return (
+        <div className="ag-theme-alpine"
+            style={{height: '400px', width: '600px'}}
+        >
+            <AgGridReact
+                defaultColDef={{sortable: true, filter: true }}
+                pagination={true}
+                rowData={rowData}
+                columnDefs={colDefs}>
+            </AgGridReact>
+        </div>
+    );
+}
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This renders a grid and loads the data in from a server.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Cell Renderer
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The simplest component to add is a cell renderer from `NumberFormatter.js`:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```javascript
+import React, { Component } from 'react';
 
-## Learn More
+export function NumberFormatter(props){
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+        const value = Number(props.value);
+        const text = value.toLocaleString(undefined, {style: 'currency', currency: 'EUR'});
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+        return (
+            <span>{text}</span>
+        );    
+}
+```
 
-### Code Splitting
+This is a function that has props, and these documented in the official docs on the [Component Cell Renderer](https://www.ag-grid.com/react-grid/component-cell-renderer/) page.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The 'value' is the current value to be rendered in the cell.
 
-### Analyzing the Bundle Size
+All we do in this component is convert the value into a number and then a currency, which we return in a `span`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
+### Using the Cell Renderer
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+To use the Cell Renderer in the Grid component we:
 
-### Advanced Configuration
+- import it
+- add it to the column definition
+- define it in the grid's `frameworkComponents`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Import it as normal:
 
-### Deployment
+```javascript
+import { NumberFormatter } from './NumberFormatter.js';
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Add it to the column definition object, in this case I'm adding it to the `price` column.
 
-### `npm run build` fails to minify
+```javascript
+            {field:"price", editable:true,
+            cellRenderer: "numberFormatter",
+            }
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Then we add a new attribute into the grid definition JSX:
+
+
+```javascript
+            frameworkComponents={{
+                numberFormatter: NumberFormatter,
+            }} 
+```
+
+The grid should then render the price in euros with a currency symbol.
+
+## Creating a Cell Editor
+
+The next component to look at is the Custom Cell Editor.
+
+Cell editors are documented in the official documentation [React Data Grid Cell Editors](https://www.ag-grid.com/react-grid/component-cell-editor/).
+
+The basic structure of the cell editor is as follows:
+
+```javascript
+import React, {forwardRef, useState, useRef, useEffect, useCallback, useImperativeHandle} from 'react';
+
+export const NumericCellEditor = forwardRef((props, ref) => {
+
+    const [value, setValue] = useState(parseInt(props.value));
+    const refInput =  useRef(null);
+
+    return (
+        <input 
+            onKeyPress={onKeyPressListener}
+            value={value}
+            onChange={onChangeListener}
+            ref={refInput} 
+        />
+    );  
+});
+```
+
+The code above receives the `ICellEditorParams` as `props` defined in the [documentation](https://www.ag-grid.com/react-grid/component-cell-editor/), and a ref to the element.
+
+Initially set the value state from the props.
+
+To the above code I have to add the `onPressKeyListener` the `onChangeListener` and a hook for `useImperativeHandle` for the grid to use and handle the focus.
+
+We need to set the focus on the input, in a class this would be done `afterGuiAttached` but we will use the `useEffect` hook:
+
+```javascript
+    // afterGuiAttached
+    useEffect( ()=> refInput.current.focus(), []);
+```
+
+The `onChangeListener` will amend the value as state using a callback to optimise for rendering.
+
+```javascript
+    const onChangeListener = useCallback( event => setValue(event.target.value), []);
+```
+
+The `onKeyPressListener`, again uses the `useCallback` hook. It only allows numbers to be entered, so if a non numeric key is pressed it uses `event.preventDefault()` to ignore the keypress.
+
+```javascript
+    const onKeyPressListener = useCallback( event => {
+        if (!isNumeric(event.nativeEvent)) {
+            event.preventDefault();
+        }
+
+        function isNumeric(event) {
+            return /\d/.test(event.key);
+        }
+    }, []);
+```
+
+The final chunk of code is to allow the grid to receive the value, which requires use of the `useImperativeHandle` hook.
+
+```
+    useImperativeHandle(ref, () => {
+        return {
+            // the final value to send to the grid, on completion of editing
+            getValue() {
+                return value;
+            }
+        };
+    });
+```    
+
+Giving us a final set of code of:
+
+```javascript
+import React, {forwardRef, useState, useRef, useEffect, useCallback, useImperativeHandle} from 'react';
+
+export const NumericCellEditor = forwardRef((props, ref) => {
+
+    const [value, setValue] = useState(parseInt(props.value));
+    const refInput =  useRef(null);
+
+    useImperativeHandle(ref, () => {
+        return {
+            getValue() {
+                return value;
+            }
+        };
+    });
+
+    const onKeyPressListener = useCallback( event => {
+        if (!isNumeric(event.nativeEvent)) {
+            event.preventDefault();
+        }
+
+        function isNumeric(event) {
+            return /\d/.test(event.key);
+        }
+    }, []);
+
+    const onChangeListener = useCallback( event => setValue(event.target.value), []);
+
+    useEffect( ()=> refInput.current.focus(), []);
+
+    return (
+        <input 
+            onKeyPress={onKeyPressListener}
+            value={value}
+            onChange={onChangeListener}
+            ref={refInput} 
+        />
+    );  
+});
+```
+
+### Using The Editor in the Grid
+
+To use the editor we: import, add to column def, and define in the framework components.
+
+```javascript
+import {NumericCellEditor} from './NumericCellEditor.js';
+```
+
+Add to the column definition:
+
+```javascript
+    {field:"price",editable:true,
+    cellRenderer: "numberFormatter",
+    cellEditor: "numericCellEditor",
+    }
+```
+
+Expand the framework components definition:
+
+```
+    frameworkComponents={{
+        numberFormatter: NumberFormatter,
+        numericCellEditor: NumericCellEditor,
+    }} 
+```
+
+Now when the editor is used the custom input element is used.
+
+## Custom Filter
+
+The custom filter will be an input that uses the format `low - high` e.g. `30000 - 35000` to show only values between 30000 euros and 35000 euros.
+
+The custom filter will be created in `RangeFilter.js`.
+
+Custom filters are documented in the official documentation for [React Data Grid Filter Component](https://www.ag-grid.com/react-grid/component-filter/)
+
+The basic structure of a filter component is as follows:
+
+```javascript
+import React, { useState, forwardRef, useRef, useImperativeHandle, setState, useCallback, useEffect } from 'react';
+
+export const RangeFilter = forwardRef((props, ref) => {
+
+    const [filter, setFilter] = useState('');
+    const input =  useRef(null);
+
+
+
+    return (
+        <form onSubmit={onSubmit}>
+            <input name="filter" ref={input} defaultValue={filter}/>
+            <button>Apply</button>
+        </form>
+    );
+
+});
+```
+
+We will need to add a hook for `useImperativeHandle` to integrate with the grid, call the filter changed call back and handle the form we are using for input.
+
+First set the focus to the input:
+
+```javascript
+    useEffect( ()=> input.current.focus(), []);
+```
+
+And when the filter changes we want to call the grid callback defined in `props`:
+
+```javascript
+    useEffect(() => {
+        props.filterChangedCallback()
+    }, [filter]);
+```
+
+Because we are using a form as the DOM component for input we need to handle the `onSubmit` event, but preventing the default form processing and using the state to set the filter value:
+
+```javascript
+    const onSubmit = useCallback( event => {
+        event.preventDefault();
+
+        let currFilter = event.target.elements.filter.value;
+
+        if (filter !== currFilter) {
+            setFilter( currFilter);
+        }
+    });
+```
+
+Then we handle the grid's lifecycle call backs. The filter itself is implemented as `doesFilterPass`:
+
+```javascript
+    useImperativeHandle(ref, () => {
+        return {
+            isFilterActive() {
+                return filter !== '';
+            },
+
+            doesFilterPass(params) {
+                const myfilter = filter.split('-');
+
+                const gt = Number(myfilter[0]);
+                const lt = Number(myfilter[1]);
+                const value = params.node.data.price;
+        
+                return value >= gt && value <= lt;
+            },
+        
+            getModel() {
+                return {filter: filter};
+            },
+
+            setModel(model) {
+                const filter = model ? model.filter : '';
+                setState( filter);
+            }
+    
+        };
+    });
+```
+
+### Using the Filter Component
+
+Using the same pattern as before: import, add to column def, and define in the framework components.
+
+```javascript
+import { RangeFilter } from './RangeFilter';
+```
+
+Add to the column definition:
+
+```javascript
+    {field:"price",editable:true,
+    cellRenderer: "numberFormatter",
+    cellEditor: "numericCellEditor",
+    filter: 'rangeFilter'
+    }
+```
+
+Expand the framework components definition:
+
+```
+    frameworkComponents={{
+        numberFormatter: NumberFormatter,
+        numericCellEditor: NumericCellEditor,
+        rangeFilter: RangeFilter
+    }} 
+```
+
+Now when the editor is used the custom input element is used.
+
+
+
