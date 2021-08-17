@@ -8,12 +8,15 @@ React Data Grid Examples used on the [AG Grid blog](https://blog.ag-grid.com/).
 
 See the Posts:
 
+- [Get Started with React Data Grid with Hooks in 5 minutes](https://blog.ag-grid.com/getting-started-with-react-hooks-and-ag-grid-in-5-minutes/)
+    - [Summary and code in getting-started-5-mins-hooks](getting-started-5-mins-hooks)
+- [Create Functional React Components using hooks for editing, filters and rendering](https://blog.ag-grid.com/customising-react-data-grid-with-hooks-and-functions/)
+    - [Summary and code in customization-demo-hooks](customization-demo-hooks)   
 - [Get Started with React Data Grid with Classes in 5 minutes](https://blog.ag-grid.com/react-get-started-with-react-grid-in-5-minutes/)
     - [Summary and code in integration-demo-classes](integration-demo-classes)
 - [Create React Components for editing, filters and rendering of React data grid cells](https://blog.ag-grid.com/learn-to-customize-react-grid-in-less-than-10-minutes/)
     - [code in customization-demo-classes](customization-demo-classes)
-- [Get Started with React Data Grid with Hooks in 5 minutes]
-    - [Summary and code in integration-demo-classes](getting-started-5-mins-hooks)    
+
 
 
 Feel free to [clone, fork or download this repo](https://github.com/ag-grid/react-data-grid) to use as a base for learning about [AG Grid](https://ag-grid.com/).
