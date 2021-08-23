@@ -1,0 +1,56 @@
+<style media="only screen">
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  html {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+    overflow: auto;
+  }
+
+  body {
+    padding: 1rem;
+    overflow: auto;
+  }
+
+  .parent-div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .buttons-div {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .grid-div {
+    flex-grow: 1;
+  }
+
+  .render-count {
+    font-weight: bold;
+    color: darkgreen;
+  }
+
+  .my-spinner {
+  width: 40px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.my-spinner-renderer {
+  margin-left: 20px;
+}
+</style>
+<div id="root"></div>

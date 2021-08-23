@@ -35,6 +35,8 @@ The [React Data Grid Example repo](https://github.com/ag-grid/ag-grid-react-exam
 
 We also maintain a [Showcase page](https://blog.ag-grid.com/showcase/) which lists public live examples of AG Grid usage.
 
+Our documentation based [Getting Started Guide](https://www.ag-grid.com/react-grid/getting-started/) covers the enterprise edition as well.
+
 
 ## About AG Grid
 
