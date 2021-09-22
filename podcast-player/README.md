@@ -1,4 +1,4 @@
-#How to Write a Podcast App Using React
+# How to Write a Podcast App Using React
 
 In this post we will iteratively create a simple Podcast listening app using React. The main GUI for the app will be AG Grid so you can see how simple it is to get a prototype application up and running, leaning on the React Data Grid to do much of the heavy lifting for us.
 
