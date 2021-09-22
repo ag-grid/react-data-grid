@@ -77,6 +77,8 @@ export function PodcastGrid(props) {
                 onGridReady={onGridReady}
                 rowData={rowData}
                 columnDefs ={columnDefs}
+                pagination={true}
+                paginationPageSize={10}
                 >
            </AgGridReact>
        </div>

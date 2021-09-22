@@ -29,12 +29,14 @@ function App() {
         <input type="text" id="quickfilter" name="quickfilter" style={{width:"30%"}} value={quickFilter}
               onChange={handleFilterChange}/>        
       </div>
-      <PodcastGrid
+      <div>
+        <PodcastGrid
         rssfeed = {rssFeed}
-        height= "400px"
+        height= "800px"
         width="100%"     
         quickFilter = {quickFilter}   
       ></PodcastGrid>
+      </div>
     </div>
   );
 }

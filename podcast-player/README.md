@@ -88,7 +88,7 @@ function App() {
       <h1>Podcast Player</h1>
       <PodcastGrid
         rssfeed = "https://feeds.simplecast.com/tOjNXec5"
-        height= "400px"
+        height= "800px"
         width="100%"
       ></PodcastGrid>
     </div>
@@ -130,7 +130,8 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 export function PodcastGrid(props) {
 
 return (
-       <div className="ag-theme-alpine" style={{height: props.height, width: props.width}}>   
+       <div className="ag-theme-alpine"
+            style={{height: props.height, width: props.width}}>   
            <AgGridReact
                 >
            </AgGridReact>
@@ -161,29 +162,29 @@ I'm not going to name them like that though, I'm going to show the headings on t
 In AG Grid, I configure the columns using an array of Column Definition objects.
 
 ```javascript
-    var columnDefs = [
-        {
-          headerName: 'Episode Title',
-          field: 'title',
-        },
-        {
-          headerName: 'Published',
-          field: 'pubDate',
-        },
-        {
-          headerName: 'Episode',
-          field: 'mp3',
-        }
-      ];
+var columnDefs = [
+    {
+      headerName: 'Episode Title',
+      field: 'title',
+    },
+    {
+      headerName: 'Published',
+      field: 'pubDate',
+    },
+    {
+      headerName: 'Episode',
+      field: 'mp3',
+    }
+  ];
 ```
 
 And then add them to the Grid as properties.
 
 ```javascript
-           <AgGridReact
-                columnDefs ={columnDefs}
-                >
-           </AgGridReact>
+<AgGridReact
+    columnDefs ={columnDefs}
+    >
+</AgGridReact>
 ```
 
 At this point my Grid will now have headers, but will still say `[loading...]` because I haven't supplied the Grid with any data to show in the rows.
@@ -191,7 +192,7 @@ At this point my Grid will now have headers, but will still say `[loading...]` b
 I'll hard code some data for the rows and `useState` to store the data.
 
 ```javascript
-    const [rowData, setRowData] = useState([
+const [rowData, setRowData] = useState([
                                 {title: "my episode", 
                                 pubDate: new Date(), 
                                 mp3: "https://mypodcast/episode.mp3"}]);
@@ -206,11 +207,11 @@ I've created data in the format that I expect to receive it when I parse a podca
 The next thing to do is to add the data into the grid, which I can do by adding a `rowData` property to the Grid.
 
 ```javascript
-           <AgGridReact
-                rowData={rowData}
-                columnDefs ={columnDefs}
-                >
-           </AgGridReact>
+<AgGridReact
+    rowData={rowData}
+    columnDefs ={columnDefs}
+    >
+</AgGridReact>
 ```
 
 My Grid will now show the hard coded `rowData` that I created, and use the column headers that I configured in the `columnDefs`.
@@ -252,7 +253,8 @@ export function PodcastGrid(props) {
       ];
 
     return (
-       <div className="ag-theme-alpine" style={{height: props.height, width: props.width}}>   
+       <div className="ag-theme-alpine"
+              style={{height: props.height, width: props.width}}>   
            <AgGridReact
                 rowData={rowData}
                 columnDefs ={columnDefs}
@@ -358,48 +360,49 @@ We don't need a very sophisticated parsing approach to get the data from an RSS 
 I will want to `fetch` the URL, and then parse it:
 
 ```javascript
-      fetch(props.rssfeed)
-                .then(response => response.text())
-                .then(str => new window.DOMParser().
-                        parseFromString(str, 'text/xml'))
+fetch(props.rssfeed)
+        .then(response => response.text())
+        .then(str => new window.DOMParser().
+                parseFromString(str, 'text/xml'))
 ```
 
 This would then return an object which I can apply `querySelector` to:
 
 ```javascript
-      fetch(props.rssfeed)
-                .then(response => response.text())
-                .then(str => new window.DOMParser().parseFromString(str, 'text/xml'))
-                .then(data => {            
-                    const itemList = data.querySelectorAll('item');
-                    ...
+fetch(props.rssfeed)
+        .then(response => response.text())
+        .then(str => new window.DOMParser().
+              parseFromString(str, 'text/xml'))
+        .then(data => {            
+            const itemList = data.querySelectorAll('item');
+            ...
 ```
 
 Because I'm using React, I'll wrap all of this in a `useEffect` method which would trigger when the `rssfeed` in the props changes.
 
 ```javascript
-    useEffect(()=>{
+useEffect(()=>{
 
-      fetch(props.rssfeed)
-        ...
-    },[props.rssfeed]);        
+  fetch(props.rssfeed)
+    ...
+},[props.rssfeed]);        
 ```
 
 During the final `then` of the `fetch` I'll build up an array of objects which matches the test data used earlier and then `setRowData` to add the data to the Grid.
 
 ```javascript
-    const itemList = data.querySelectorAll('item');
+const itemList = data.querySelectorAll('item');
 
-    const items=[];
-    itemList.forEach(el => {
-        items.push({
-        pubDate: new Date(el.querySelector('pubDate').textContent),
-        title: el.querySelector('title').innerHTML,
-        mp3: el.querySelector('enclosure').getAttribute('url')
-        });
+const items=[];
+itemList.forEach(el => {
+    items.push({
+    pubDate: new Date(el.querySelector('pubDate').textContent),
+    title: el.querySelector('title').innerHTML,
+    mp3: el.querySelector('enclosure').getAttribute('url')
     });
+});
 
-    setRowData(items)
+setRowData(items)
 ```
 
 That's the basic theory. Now to implement it.
@@ -456,51 +459,51 @@ And when I do I can see that it would be useful to format the grid columns.
 The Episode Title can be quite long so I want to make the text wrap, and format the cell height to allow all of the `title` to render. I can configure this with some additional column definition properties.
 
 ```javascript
-          wrapText: true,
-          autoHeight: true,
+wrapText: true,
+autoHeight: true,
 ```
 
 I also want the column to be resizable to give the user the option to control the rendering. Again this is a boolean property on the column definition.
 
 ```javascript
-          resizable: true,
+resizable: true,
 ```
 
 I think it would be useful to allow the user to sort the grid to find the most recent podcast. I can implement this using a property on the `pubDate` column.
 
 ```javascript
-          sortable: true,
+sortable: true,
 ```
 
 And then to control the column sizes, relative to each other, I will use the `flex` property to make both the `title` and `mp3` twice the size of the `date`
 
 ```javascript
-          flex: 2,
+flex: 2,
 ```
 
 The full column definitions are below to enable, sizing, resizing, and sorting.
 
 ```javascript
-    var columnDefs = [
-        {
-          headerName: 'Episode Title',
-          field: 'title',
-          wrapText: true,
-          autoHeight: true,
-          flex: 2,
-          resizable: true,
-        },
-        {
-          headerName: 'Published',
-          field: 'pubDate',
-          sortable: true,
-        },
-        {
-          headerName: 'Episode',
-          field: 'mp3',
-          flex: 2,
-        }
-      ];
+var columnDefs = [
+    {
+      headerName: 'Episode Title',
+      field: 'title',
+      wrapText: true,
+      autoHeight: true,
+      flex: 2,
+      resizable: true,
+    },
+    {
+      headerName: 'Published',
+      field: 'pubDate',
+      sortable: true,
+    },
+    {
+      headerName: 'Episode',
+      field: 'mp3',
+      flex: 2,
+    }
+  ];
 ```
 
 At this point I can't play podcasts, I've actually built a very simple RSS Reader which allows sorting by published episode data.
@@ -563,7 +566,8 @@ export function PodcastGrid(props) {
       ];
 
     return (
-       <div className="ag-theme-alpine" style={{height: props.height, width: props.width}}>   
+       <div className="ag-theme-alpine"
+            style={{height: props.height, width: props.width}}>   
            <AgGridReact
                 rowData={rowData}
                 columnDefs ={columnDefs}
@@ -606,7 +610,7 @@ cellRenderer: ((params)=>`
 To improve the formatting, I'll make that cell auto resize to fit the contents:
 
 ```javascript
-          autoHeight: true
+autoHeight: true
 ```
 
 And I add this `cellRenderer` to the `mp3` column definition.
@@ -649,8 +653,8 @@ const [rssFeed, setRssFeed] = useState("https://feeds.simplecast.com/tOjNXec5");
 And use the rssFeed state in the JSX to setup the property for the `PodcastGrid`:
 
 ```javascript
-      <PodcastGrid
-        rssfeed = {rssFeed}
+<PodcastGrid
+    rssfeed = {rssFeed}
 ```
 
 Giving me an `App.js` that looks like this:
@@ -670,7 +674,7 @@ function App() {
       <h1>Podcast Player</h1>
       <PodcastGrid
         rssfeed = {rssFeed}
-        height= "400px"
+        height= "800px"
         width="100%"
       ></PodcastGrid>
     </div>
@@ -683,12 +687,12 @@ export default App;
 The simplest way I can think of to make this configurable is to add an input field, with a button to trigger loading the feed.
 
 ```javascript
-      <div>
-        <label htmlFor="rssFeedUrl">RSS Feed URL:</label>
-        <input type="text" id="rssFeedUrl" name="rssFeedUrl"
-                width="80%" defaultValue={rssFeed}/>
-        <button onClick={handleLoadFeedClick}>Load Feed</button>
-      </div>
+<div>
+    <label htmlFor="rssFeedUrl">RSS Feed URL:</label>
+    <input type="text" id="rssFeedUrl" name="rssFeedUrl"
+        width="80%" defaultValue={rssFeed}/>
+    <button onClick={handleLoadFeedClick}>Load Feed</button>
+</div>
 ```
 
 Note that I'm using `defaultValue` in the JSX so that once the value has been set by React, the DOM is then allowed to manage it from then on. If I had used `value` then I would have to take control over the change events. By using `defaultValue` I'm doing the simplest thing that will work to add the basic feature.
@@ -698,10 +702,10 @@ Also, when working with JSX I have to use `htmlFor` instead of `for` in the `lab
 And to handle the button click:
 
 ```javascript
-  const handleLoadFeedClick = ()=>{
+const handleLoadFeedClick = ()=>{
     const inputRssFeed = document.getElementById("rssFeedUrl").value;
     setRssFeed(inputRssFeed);
-  }
+}
 ```
 
 Now I have the ability to:
@@ -756,16 +760,16 @@ filter: `agGridTextFilter`
 The `title` column definition now looks as follows:
 
 ```
-    var columnDefs = [
-        {
-          headerName: 'Episode Title',
-          field: 'title',
-          wrapText: true,
-          autoHeight: true,
-          flex: 2,
-          resizable: true,
-          filter: `agGridTextFilter`
-        },
+var columnDefs = [
+    {
+      headerName: 'Episode Title',
+      field: 'title',
+      wrapText: true,
+      autoHeight: true,
+      flex: 2,
+      resizable: true,
+      filter: `agGridTextFilter`
+    },
 ```
 
 This provides me with an out of the box searching and filtering capability for the data in the title.
@@ -777,12 +781,12 @@ Since it is no extra work for me, I'm going to add a [filter to date](https://ag
 There is an inbuilt Date filter in AG Grid, the `agDateColumnFilter` which I can add as a property to the `pubDate` column.
 
 ```
-        {
-          headerName: 'Published',
-          field: 'pubDate',
-          sortable: true,
-          filter: 'agDateColumnFilter'
-        },
+{
+  headerName: 'Published',
+  field: 'pubDate',
+  sortable: true,
+  filter: 'agDateColumnFilter'
+},
 ```
 
 With this property added, the user now has the ability to search for podcasts for date ranges.
@@ -816,15 +820,15 @@ And then added a `Description` column to my Data Grid.
 While that worked, the problem is that the description can often be rather large and has embedded HTML formatting.
 
 ```
-        {
-          headerName: 'Description',
-          field: 'description',
-          wrapText: true,
-          autoHeight: true,
-          flex: 2,
-          resizable: true,
-          filter: `agGridTextFilter`
-        },
+{
+  headerName: 'Description',
+  field: 'description',
+  wrapText: true,
+  autoHeight: true,
+  flex: 2,
+  resizable: true,
+  filter: `agGridTextFilter`
+},
 ```
 
 The resulting Grid wasn't very aesthetic.
@@ -896,10 +900,10 @@ The data does not even have to be rendered to the Data Grid itself, it just has 
 I'll start by removing the `description` from the `columnDefs`, but keeping the description data in the `rowData`, and I'll use the version with the HTML tags stripped because we are using a text search.
 
 ```
-    description: el
-        .querySelector('description')
-        .textContent.replace(/(<([^>]+)>)/gi, ''),
-    });
+description: el
+    .querySelector('description')
+    .textContent.replace(/(<([^>]+)>)/gi, ''),
+});
 ```
 
 ##### App.js changes for QuickFilter
@@ -931,12 +935,12 @@ const handleFilterChange = (event)=>{
 The next step is to pass the quick filter text to the `PodcastGrid` as a new property.
 
 ```
-      <PodcastGrid
-        rssfeed = {rssFeed}
-        height= "400px"
-        width="100%"     
-        quickFilter = {quickFilter}   
-      ></PodcastGrid>
+<PodcastGrid
+    rssfeed = {rssFeed}
+    height= "800px"
+    width="100%"     
+    quickFilter = {quickFilter}   
+></PodcastGrid>
 ```
 
 ##### Use QuickFilter API in React Data Grid
@@ -955,20 +959,20 @@ const [gridApi, setGridApi] = useState();
 Then amend the Grid declartion to hook into the `onGridReady` callback.
 
 ```
-  <AgGridReact
-        onGridReady={onGridReady}
-        rowData={rowData}
-        columnDefs ={columnDefs}
-        >
-   </AgGridReact>
+<AgGridReact
+    onGridReady={onGridReady}
+    rowData={rowData}
+    columnDefs ={columnDefs}
+    >
+</AgGridReact>
 ```
 
 The `onGridReady` handler will store a reference to the Grid API:
 
 ```
-    const onGridReady = (params) => {
-      setGridApi(params.api);
-    }
+const onGridReady = (params) => {
+  setGridApi(params.api);
+}
 ```
 
 Finally, to use the props variable `quickFilter` that has been passed in:
@@ -985,6 +989,36 @@ When the `gridApi` has been set, and the property `quickFilter` changes, we will
 
 This provides a very dynamic and clean way of identifying podcasts that include certain words in the description.
 
+
+## Version 6 - Pagination
+
+After using the app I realised that with so many podcast episodes in a feed, having all of the episodes in a single table was useful but I would have preferred the ability to page through them, and I'd like to see a count of all of the podcast episodes that are available in the feed.
+
+Fortunately we can get all of that functionality from a single AG Grid property.
+
+- [pagination](https://www.ag-grid.com/react-data-grid/row-pagination/)
+
+The property applies to the Grid. I can add it in the Grid declaration:
+
+```
+<AgGridReact
+    onGridReady={onGridReady}
+    rowData={rowData}
+    columnDefs ={columnDefs}
+    pagination={true}
+    >
+</AgGridReact>
+```
+
+This immediately shows me the count of podcast episodes available and makes navigating through the list easier.
+
+I also want to take advantage of another feature of the AG Grid pagination and set the page size, the default page size is 100, and 10 seems better for this app:
+
+```
+paginationPageSize={10}
+```
+
+Again, i've only added a few extra properties to the Data Grid, but have immediately made the application more usable, with minimal development effort.
 
 ## Summary
 
@@ -1007,6 +1041,7 @@ What we learned:
 - Filtering column data
 - Using the AG Grid API in react
 - `quickFilter` operates on all rowData, not just the displayed data
+- adding pagination and row count to a Data Grid
 
 ## Available Scripts
 
