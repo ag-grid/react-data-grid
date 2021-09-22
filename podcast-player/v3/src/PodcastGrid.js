@@ -48,7 +48,8 @@ export function PodcastGrid(props) {
           headerName: 'Episode',
           field: 'mp3',
           flex: 2,
-          cellRenderer: ((params)=>`<audio controls preload="none">
+          cellRenderer: ((params)=>`<audio controls preload="none"
+                                        style="height:2em; vertical-align: middle;">
                                         <source src=${params.value} type="audio/mpeg" />
                                     </audio>`),
           autoHeight: true

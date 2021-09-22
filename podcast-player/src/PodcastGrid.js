@@ -40,24 +40,25 @@ export function PodcastGrid(props) {
           field: 'title',
           wrapText: true,
           autoHeight: true,
-          flex: 1,
+          flex: 2,
           resizable: true,
           filter: `agGridTextFilter`
         },
         {
           headerName: 'Published',
           field: 'pubDate',
+          flex: 1,
           sortable: true,
           filter: 'agDateColumnFilter'
         },
         {
           headerName: 'Episode',
           field: 'mp3',
-          flex: 2,
-          cellRenderer: ((params)=>`<audio controls preload="none">
+          flex: 1,
+          cellRenderer: ((params)=>`<audio controls preload="none" 
+                                        style="height:2em; vertical-align: middle;">
                                         <source src=${params.value} type="audio/mpeg" />
                                     </audio>`),
-          autoHeight: true
         }
       ];
 
@@ -78,7 +79,7 @@ export function PodcastGrid(props) {
                 rowData={rowData}
                 columnDefs ={columnDefs}
                 pagination={true}
-                paginationPageSize={10}
+                paginationAutoPageSize={true}
                 >
            </AgGridReact>
        </div>

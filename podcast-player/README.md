@@ -88,7 +88,7 @@ function App() {
       <h1>Podcast Player</h1>
       <PodcastGrid
         rssfeed = "https://feeds.simplecast.com/tOjNXec5"
-        height= "800px"
+        height= "500px"
         width="100%"
       ></PodcastGrid>
     </div>
@@ -598,19 +598,14 @@ e.g.
 </audio>
 ```
 
-The simplest way to implement this is to use a `cellRenderer` directly in the column definition.
+The simplest way to implement this is to use a `cellRenderer` directly in the column definition, and I will provide a little styling to adjust the height and vertical positioning.
 
 ```javascript
 cellRenderer: ((params)=>`
-      <audio controls preload="none">
+      <audio controls preload="none"
+          style="height:2em; vertical-align: middle;">
           <source src=${params.value} type="audio/mpeg" />
       </audio>`)
-```
-
-To improve the formatting, I'll make that cell auto resize to fit the contents:
-
-```javascript
-autoHeight: true
 ```
 
 And I add this `cellRenderer` to the `mp3` column definition.
@@ -622,7 +617,8 @@ And I add this `cellRenderer` to the `mp3` column definition.
     flex: 2,
     autoHeight: true,
     cellRenderer: ((params)=>`
-          <audio controls preload="none">
+          <audio controls preload="none"
+              style="height:2em; vertical-align: middle;">
               <source src=${params.value} type="audio/mpeg" />
           </audio>`)
 }
@@ -674,7 +670,7 @@ function App() {
       <h1>Podcast Player</h1>
       <PodcastGrid
         rssfeed = {rssFeed}
-        height= "800px"
+        height= "500px"
         width="100%"
       ></PodcastGrid>
     </div>
@@ -1016,6 +1012,12 @@ I also want to take advantage of another feature of the AG Grid pagination and s
 
 ```
 paginationPageSize={10}
+```
+
+Or I could allow the Grid to choose the best page size for the data and the size of the grid:
+
+```
+paginationAutoPageSize={true}
 ```
 
 Again, i've only added a few extra properties to the Data Grid, but have immediately made the application more usable, with minimal development effort.

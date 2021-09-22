@@ -21,8 +21,7 @@ function App() {
       </div>
       <PodcastGrid
         rssfeed = {rssFeed}
-        height= "800px"
-        width="100%"
+        height="500px"
       ></PodcastGrid>
     </div>
   );
