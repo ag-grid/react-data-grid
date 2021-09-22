@@ -11,3 +11,32 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.custom-tooltip {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+  transition: opacity 1;
+  background-color: white;
+  width: 90%;
+  line-height: 1;
+  padding: 5px;
+  text-align: left;
+  text-indent: 0;
+}
+
+.custom-tooltip.ag-tooltip-hiding {
+  opacity: 0;
+}
+
+.custom-tooltip p {
+  white-space: normal;
+  border: 0px;
+  margin: 3px;
+  text-indent: 0;
+}
+
+.custom-tooltip p:first-of-type {
+  font-weight: bold;
+}

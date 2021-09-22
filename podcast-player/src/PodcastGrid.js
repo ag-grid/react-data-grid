@@ -4,6 +4,9 @@ import {AgGridReact} from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
+
+import PodcastDescriptionTooltip from './PodcastDescriptionTooltip.jsx'
+
 export function PodcastGrid(props) {
 
     const [rowData, setRowData] = useState([]);
@@ -21,7 +24,10 @@ export function PodcastGrid(props) {
                         items.push({
                         pubDate: new Date(el.querySelector('pubDate').textContent),
                         title: el.querySelector('title').innerHTML,
-                        mp3: el.querySelector('enclosure').getAttribute('url')
+                        mp3: el.querySelector('enclosure').getAttribute('url'),
+                        description: el
+                            .querySelector('description')
+                            .textContent.replace(/(<([^>]+)>)/gi, ''),
                         });
                     });
 
@@ -36,13 +42,27 @@ export function PodcastGrid(props) {
           field: 'title',
           wrapText: true,
           autoHeight: true,
+          flex: 1,
+          resizable: true,
+          filter: `agGridTextFilter`
+        },
+        {
+          headerName: 'Description',
+          field: 'description',
+          wrapText: true,
+          autoHeight: true,
           flex: 2,
           resizable: true,
+          filter: `agGridTextFilter`,
+          valueFormatter: params => params.data.description.length>125 ? params.data.description.substr(0,125) + "..." : params.data.description,
+          tooltipField:"description",
+          tooltipComponent: 'podcastDescriptionTooltip'
         },
         {
           headerName: 'Published',
           field: 'pubDate',
           sortable: true,
+          filter: 'agDateColumnFilter'
         },
         {
           headerName: 'Episode',
@@ -60,6 +80,8 @@ export function PodcastGrid(props) {
            <AgGridReact
                 rowData={rowData}
                 columnDefs ={columnDefs}
+                tooltipShowDelay={0}
+                frameworkComponents={{ podcastDescriptionTooltip: PodcastDescriptionTooltip }}
                 >
            </AgGridReact>
        </div>
