@@ -19,6 +19,19 @@ You can find the source code for this project at:
 
 In the `podcast-player` folder.
 
+The root of the `podcast-player` folder has the current version of the app, and you can run it with:
+
+```
+npm install
+npm start
+```
+
+You do need to have [node.js installed](https://nodejs.org/en/download/) as a pre-requisite.
+
+The project contains sub-folders for the different stages listed in this post e.g. folder 'v1' is the code for the 'Version 1' section. To run any of the intermediate versions, `cd` into the subfolder and run `npm install` followed by `npm start`.
+
+
+### Getting Started
 
 I created the project using [Create React App](https://github.com/facebook/create-react-app).
 
@@ -34,6 +47,8 @@ I'm going to use the community edition of AG Grid and the AG Grid React UI and a
 ```shell
 npm install --save ag-grid-community ag-grid-react
 ```
+
+These are the basic setup instructions that you can find on the [AG Grid React Getting Started Page](https://ag-grid.com/react-data-grid/getting-started/).
 
 ## Version 1 - Create a Grid to Render Podcasts
 
@@ -397,7 +412,7 @@ So I'll remove my test data:
     const [rowData, setRowData] = useState([]);
 ```
 
-And:
+The basic steps to loading an RSS Feed into AG Grid are:
 
 - load from an RSS feed,
 - parse the feed using `DOMParser`
@@ -432,7 +447,7 @@ As you can see below:
     },[props.rssfeed]);
 ```
 
-This would actually be enough to load the data into the Grid.
+This would actually be enough to load the planned data into the Grid.
 
 ### Formatting the Grid
 
@@ -722,10 +737,263 @@ I've listed a few of our favourite JavaScript and technical podcast feeds below,
 - Syntax FM
     - https://feed.syntax.fm/rss  
 
+## Version 5 - Searching and Filtering
 
-## Future Work
+Having used the app, I realised that I really wanted some sort of searching and filtering functionality to find episodes on a specific topic.
 
-Obviously there is a lot more that we can improve, but... so long as you type in the correct URL, and the URL feed supports CORS access from other sites then, this is simple podcast reader.
+The easiest way to add that quickly is to add a 'filter' to the columns.
+
+### Filter on Title
+
+The `title` is a `String` so I can use an [in-built AG Grid filter](https://www.ag-grid.com/react-data-grid/filtering/) to allow me to text search and filter the data in the title column.
+
+The built in text filter is called `agTextColumnFilter` and I add it to the column definition as a property:
+
+```
+filter: `agGridTextFilter`
+```
+
+The `title` column definition now looks as follows:
+
+```
+    var columnDefs = [
+        {
+          headerName: 'Episode Title',
+          field: 'title',
+          wrapText: true,
+          autoHeight: true,
+          flex: 2,
+          resizable: true,
+          filter: `agGridTextFilter`
+        },
+```
+
+This provides me with an out of the box searching and filtering capability for the data in the title.
+
+### Filter on Date
+
+Since it is no extra work for me, I'm going to add a [filter to date](https://ag-grid.com/react-data-grid/filter-date/).
+
+There is an inbuilt Date filter in AG Grid, the `agDateColumnFilter` which I can add as a property to the `pubDate` column.
+
+```
+        {
+          headerName: 'Published',
+          field: 'pubDate',
+          sortable: true,
+          filter: 'agDateColumnFilter'
+        },
+```
+
+With this property added, the user now has the ability to search for podcasts for date ranges.
+
+
+### Text Filter on Description
+
+The titles of podcasts don't contain as much information as the description. It would be useful to allow searching through the description as well.
+
+The easiest way to add that would be to create a description column and then allow filtering on the column.
+
+I iterated through a few experiments before finding one approach I liked.
+
+- display the full description from the RSS feed
+- use `cellRenderer` to display description HTML in the cell
+- strip HTML tags from RSS feed data
+- show a subset of data using a `valueFormatter`
+- use a Quick Filter
+
+#### Display the full description from the RSS feed
+
+I added an additional parsing query in the rss `fetch` to create a `description` property.
+
+```
+description: el.querySelector('description')
+             .textContent
+```
+
+And then added a `Description` column to my Data Grid.
+
+While that worked, the problem is that the description can often be rather large and has embedded HTML formatting.
+
+```
+        {
+          headerName: 'Description',
+          field: 'description',
+          wrapText: true,
+          autoHeight: true,
+          flex: 2,
+          resizable: true,
+          filter: `agGridTextFilter`
+        },
+```
+
+The resulting Grid wasn't very aesthetic.
+
+#### Use `cellRenderer` to display HTML in the cell
+
+Since the data that is retreived in the description is HTML, I could render the HTML directly in the table by creating a `cellRenderer`.
+
+By default the cell shows the data values as text. The output from a `cellRenderer` is rendered as HTML.
+
+Adding a `cellRenderer` property causes the cell to render the supplied HTML, but this was often too large and had embedded images.
+
+```
+cellRenderer: ((params)=>params.value)
+```
+
+#### Strip HTML tags from RSS feed data
+
+My next thought was to strip all the HTML tags out of the description and render the raw text.
+
+I could do that by removing the `cellRenderer` and adding a regex when parsing the description field.
+
+```
+descriptionTxt: el.querySelector('description')
+                .textContent.replace(/(<([^>]+)>)/gi, ''),
+```
+
+This was the best option so far, but still showed too much text in the cell.
+
+#### Show a subset of data using a `valueFormatter`
+
+The filter for the columns operates on the rowData, not the displayed data, so I could still use a column filter and simply cut down on the data displayed to the user.
+
+I could do that by using a `valueFormatter` rather than a `cellRenderer`.
+
+A `valueFormatter` amends the value and returns it as a `String` to display on the grid. The `cellRenderer` returns HTML.
+
+By showing only a trimmed version of the description, the cell in the Data Grid does not get too large, but still gives me the ability to filter on the complete text.
+
+```
+valueFormatter: params => params.data.description.length>125 ?
+                     params.data.description.substr(0,125) + "..." :
+                     params.data.description
+```
+
+This would give me a `description` column definition of:
+
+```
+{
+  headerName: 'Description',
+  field: 'description',
+  wrapText: true,
+  autoHeight: true,
+  flex: 2,
+  resizable: true,
+  filter: `agGridTextFilter`,
+  valueFormatter: params => params.data.description.length>125 ?
+                         params.data.description.substr(0,125) + "..." :
+                         params.data.description
+},
+```
+
+#### Use a QuickFilter
+
+A quick filter is a filtering mechanism that matches any of the data in the Data Grid's row data. e.g. using `api.setQuickFilter("testing");` would match any row with "testing" in the `title` or `description` field.
+
+The data does not even have to be rendered to the Data Grid itself, it just has to be present in the data. So I could remove the description column and just add an input field to search the contents. That would make the whole grid simpler and the user experience cleaner.
+
+I'll start by removing the `description` from the `columnDefs`, but keeping the description data in the `rowData`, and I'll use the version with the HTML tags stripped because we are using a text search.
+
+```
+    description: el
+        .querySelector('description')
+        .textContent.replace(/(<([^>]+)>)/gi, ''),
+    });
+```
+
+##### App.js changes for QuickFilter
+
+I first need to make changes to the `App.js` to add a 'search' input box.
+
+```
+<div>
+    <label htmlFor="quickfilter">Quick Filter:</label>
+    <input type="text" id="quickfilter" name="quickfilter"
+           value={quickFilter} onChange={handleFilterChange}/>        
+</div>
+```
+
+I then need to create the state for `quickFilter` and write a `handleFilterChange` function that will store the state when we change it in the input field.
+
+```
+const [quickFilter, setQuickFilter] = useState("");
+```
+
+And then write the `handleFilterChange` function.
+
+```
+const handleFilterChange = (event)=>{
+    setQuickFilter(event.target.value);
+}
+```
+
+The next step is to pass the quick filter text to the `PodcastGrid` as a new property.
+
+```
+      <PodcastGrid
+        rssfeed = {rssFeed}
+        height= "400px"
+        width="100%"     
+        quickFilter = {quickFilter}   
+      ></PodcastGrid>
+```
+
+##### Use QuickFilter API in React Data Grid
+
+The `PodcastGrid` component has not yet needed to use the AG Grid API, everything has been achieved through properties on the Grid or the Column Definitions.
+
+To be able to access the API I need too hook into the Data Grid's `onGridReady` event, and store the API access as state.
+
+
+I'll create the state variable first:
+
+```
+const [gridApi, setGridApi] = useState();
+```
+
+Then amend the Grid declartion to hook into the `onGridReady` callback.
+
+```
+  <AgGridReact
+        onGridReady={onGridReady}
+        rowData={rowData}
+        columnDefs ={columnDefs}
+        >
+   </AgGridReact>
+```
+
+The `onGridReady` handler will store a reference to the Grid API:
+
+```
+    const onGridReady = (params) => {
+      setGridApi(params.api);
+    }
+```
+
+Finally, to use the props variable `quickFilter` that has been passed in:
+
+```
+useEffect(()=>{
+  if(gridApi){
+    gridApi.setQuickFilter(props.quickFilter);
+  }
+}, [gridApi, props.quickFilter])
+```
+
+When the `gridApi` has been set, and the property `quickFilter` changes, we will call the `setQuickFilter` method on the API to filter the Grid.
+
+This provides a very dynamic and clean way of identifying podcasts that include certain words in the description.
+
+
+## Summary
+
+Obviously there is a lot more that we can improve, but... so long as you type in the correct URL, and the URL feed supports CORS access from other sites then, this is a very simple podcast reader.
+
+We saw that AG Grid made it very easy to experiment with different ways of filtering and interacting with the data, and I was able to explore alteratives with minimal development time.
+
+Most of the functionality I was adding to the application was via out of the box Data Grid features configured through properties. When we did need slightly more interactive functionality, the API was easy to get hold of.
+
 
 What we learned:
 
@@ -736,6 +1004,9 @@ What we learned:
 - parsing RSS and XML using `DOMParser`
 - Impact of Cross-Origin Resource Sharing
 - Some top podcasts to listen to
+- Filtering column data
+- Using the AG Grid API in react
+- `quickFilter` operates on all rowData, not just the displayed data
 
 ## Available Scripts
 
@@ -923,4 +1194,88 @@ Columndefs
 //          cellRenderer: 'audioHTMLRenderer' // render as a custom control
         }
       ];
+```
+
+
+#### Show full description in a Tooltip
+
+Since the `valueFormatter` shows a subset of data, I thought it would be useful to experiment with showing all of the description data, but in a tooltip when the user hovers over the description.
+
+AG Grid has a customisable [Tooltip Component](https://www.ag-grid.com/react-data-grid/component-tooltip/) which we can use to show the data on hover.
+
+The Tooltip component can be normal React component.
+
+- component .jsx
+- remember to add the CSS
+
+
+PodcastDescriptionTooltip.jsx
+
+```
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
+
+export default forwardRef((props, ref) => {
+    const [data, setData] = useState(props.api.getDisplayedRowAtIndex(props.rowIndex).data);
+  
+    useImperativeHandle(ref, () => {
+        return {
+            getReactContainerClasses() {
+                return ['custom-tooltip'];
+            }
+        }
+    });
+  
+    return (        
+        <div className="custom-tooltip">
+            <p>{data.title}</p>
+            <p>{data.description}</p>
+        </div>
+    );
+  });
+```
+
+```
+import PodcastDescriptionTooltip from './PodcastDescriptionTooltip.jsx'
+```
+
+```
+          tooltipField:"description",
+          tooltipComponent: 'podcastDescriptionTooltip'
+```
+
+```
+tooltipShowDelay={0}
+                frameworkComponents={{ podcastDescriptionTooltip: PodcastDescriptionTooltip }}
+```
+
+CSS
+
+```
+.custom-tooltip {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+  transition: opacity 1;
+  background-color: white;
+  width: 90%;
+  line-height: 1;
+  padding: 5px;
+  text-align: left;
+  text-indent: 0;
+}
+
+.custom-tooltip.ag-tooltip-hiding {
+  opacity: 0;
+}
+
+.custom-tooltip p {
+  white-space: normal;
+  border: 0px;
+  margin: 3px;
+  text-indent: 0;
+}
+
+.custom-tooltip p:first-of-type {
+  font-weight: bold;
+}
 ```

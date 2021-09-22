@@ -16,7 +16,7 @@ function App() {
       <h1>Podcast Player</h1>
       <div>
         <label htmlFor="rssFeedUrl">RSS Feed URL:</label>
-        <input type="text" id="rssFeedUrl" name="rssFeedUrl"  width="80%" defaultValue={rssFeed}/>
+        <input type="text" id="rssFeedUrl" name="rssFeedUrl" style={{width:"50%"}} defaultValue={rssFeed}/>
         <button onClick={handleLoadFeedClick}>Load Feed</button>
       </div>
       <PodcastGrid
