@@ -749,13 +749,13 @@ The `title` is a `String` so I can use an [in-built AG Grid filter](https://www.
 
 The built in text filter is called `agTextColumnFilter` and I add it to the column definition as a property:
 
-```
+```javascript
 filter: `agGridTextFilter`
 ```
 
 The `title` column definition now looks as follows:
 
-```
+```javascript
 var columnDefs = [
     {
       headerName: 'Episode Title',
@@ -776,7 +776,7 @@ Since it is no extra work for me, I'm going to add a [filter to date](https://ag
 
 There is an inbuilt Date filter in AG Grid, the `agDateColumnFilter` which I can add as a property to the `pubDate` column.
 
-```
+```javascript
 {
   headerName: 'Published',
   field: 'pubDate',
@@ -806,7 +806,7 @@ I iterated through a few experiments before finding one approach I liked.
 
 I added an additional parsing query in the rss `fetch` to create a `description` property.
 
-```
+```javascript
 description: el.querySelector('description')
              .textContent
 ```
@@ -815,7 +815,7 @@ And then added a `Description` column to my Data Grid.
 
 While that worked, the problem is that the description can often be rather large and has embedded HTML formatting.
 
-```
+```javascript
 {
   headerName: 'Description',
   field: 'description',
@@ -837,7 +837,7 @@ By default the cell shows the data values as text. The output from a `cellRender
 
 Adding a `cellRenderer` property causes the cell to render the supplied HTML, but this was often too large and had embedded images.
 
-```
+```javascript
 cellRenderer: ((params)=>params.value)
 ```
 
@@ -847,7 +847,7 @@ My next thought was to strip all the HTML tags out of the description and render
 
 I could do that by removing the `cellRenderer` and adding a regex when parsing the description field.
 
-```
+```javascript
 descriptionTxt: el.querySelector('description')
                 .textContent.replace(/(<([^>]+)>)/gi, ''),
 ```
@@ -864,7 +864,7 @@ A `valueFormatter` amends the value and returns it as a `String` to display on t
 
 By showing only a trimmed version of the description, the cell in the Data Grid does not get too large, but still gives me the ability to filter on the complete text.
 
-```
+```javascript
 valueFormatter: params => params.data.description.length>125 ?
                      params.data.description.substr(0,125) + "..." :
                      params.data.description
@@ -872,7 +872,7 @@ valueFormatter: params => params.data.description.length>125 ?
 
 This would give me a `description` column definition of:
 
-```
+```javascript
 {
   headerName: 'Description',
   field: 'description',
@@ -895,7 +895,7 @@ The data does not even have to be rendered to the Data Grid itself, it just has 
 
 I'll start by removing the `description` from the `columnDefs`, but keeping the description data in the `rowData`, and I'll use the version with the HTML tags stripped because we are using a text search.
 
-```
+```javascript
 description: el
     .querySelector('description')
     .textContent.replace(/(<([^>]+)>)/gi, ''),
@@ -906,7 +906,7 @@ description: el
 
 I first need to make changes to the `App.js` to add a 'search' input box.
 
-```
+```javascript
 <div>
     <label htmlFor="quickfilter">Quick Filter:</label>
     <input type="text" id="quickfilter" name="quickfilter"
@@ -916,13 +916,13 @@ I first need to make changes to the `App.js` to add a 'search' input box.
 
 I then need to create the state for `quickFilter` and write a `handleFilterChange` function that will store the state when we change it in the input field.
 
-```
+```javascript
 const [quickFilter, setQuickFilter] = useState("");
 ```
 
 And then write the `handleFilterChange` function.
 
-```
+```javascript
 const handleFilterChange = (event)=>{
     setQuickFilter(event.target.value);
 }
@@ -930,7 +930,7 @@ const handleFilterChange = (event)=>{
 
 The next step is to pass the quick filter text to the `PodcastGrid` as a new property.
 
-```
+```javascript
 <PodcastGrid
     rssfeed = {rssFeed}
     height= "800px"
@@ -948,13 +948,13 @@ To be able to access the API I need too hook into the Data Grid's `onGridReady` 
 
 I'll create the state variable first:
 
-```
+```javascript
 const [gridApi, setGridApi] = useState();
 ```
 
 Then amend the Grid declartion to hook into the `onGridReady` callback.
 
-```
+```javascript
 <AgGridReact
     onGridReady={onGridReady}
     rowData={rowData}
@@ -965,7 +965,7 @@ Then amend the Grid declartion to hook into the `onGridReady` callback.
 
 The `onGridReady` handler will store a reference to the Grid API:
 
-```
+```javascript
 const onGridReady = (params) => {
   setGridApi(params.api);
 }
@@ -973,7 +973,7 @@ const onGridReady = (params) => {
 
 Finally, to use the props variable `quickFilter` that has been passed in:
 
-```
+```javascript
 useEffect(()=>{
   if(gridApi){
     gridApi.setQuickFilter(props.quickFilter);
@@ -996,7 +996,7 @@ Fortunately we can get all of that functionality from a single AG Grid property.
 
 The property applies to the Grid. I can add it in the Grid declaration:
 
-```
+```javascript
 <AgGridReact
     onGridReady={onGridReady}
     rowData={rowData}
@@ -1010,17 +1010,207 @@ This immediately shows me the count of podcast episodes available and makes navi
 
 I also want to take advantage of another feature of the AG Grid pagination and set the page size, the default page size is 100, and 10 seems better for this app:
 
-```
+```javascript
 paginationPageSize={10}
 ```
 
 Or I could allow the Grid to choose the best page size for the data and the size of the grid:
 
-```
+```javascript
 paginationAutoPageSize={true}
 ```
 
 Again, i've only added a few extra properties to the Data Grid, but have immediately made the application more usable, with minimal development effort.
+
+## Version 7 - Podcast List
+
+I think it would be useful to create a list of podcasts that I listen to, so I don't have to type in the URL each time.
+
+Initially this will be a hard coded list, but longer term it would add more benefit to the user if the list was persisted in some way, either in Local Storage or some online mechanism. But since this tutorial is about getting as much value out to the user with as little coding effort as we can, I'll start with a drop down.
+
+My initial thought is to create a drop down and then set the RSS Feed input with the value:
+
+```html
+<div>
+  <label htmlFor="podcasts">Choose a podcast:</label>
+  <select name="podcasts" id="podcasts" onchange={handleChooseAPodcast}>
+    <option value="https://feeds.simplecast.com/tOjNXec5">WebRush</option>
+    <option value="https://feed.pod.co/the-evil-tester-show">The Evil Tester Show</option>  
+  </select>
+</div>
+```
+
+To do that I will need to change my app from using an [uncontrolled component](https://reactjs.org/docs/uncontrolled-components.html), to a [controlled component](https://reactjs.org/docs/forms.html#controlled-components).
+
+### Editing Input Field Value with React
+
+The current implementation for the RSS Feed input is uncontrolled:
+
+- once loaded the state of the input field is managed by the browser through normal user interaction
+- the value in the input field is set using `defaultValue`. This is only available to programmatic control during initial setup.
+- we want the drop down selection to change the `value` of the input field
+- to do that, we need to write the event handlers to manage the input field state.
+
+I'll create a state for `inputFeedUrl` to distinguish it from the `rssFeed` which is set when the user clicks the `Load Feed` button.
+
+```javascript
+const [inputFeedUrl, setInputFeedUrl] = 
+        useState("https://feeds.simplecast.com/tOjNXec5");
+```
+
+Then change the text input to a controlled component by setting the `value` with the state, rather than the `defaultValue`.
+
+```javascript
+<input type="text" id="rssFeedUrl" name="rssFeedUrl"  style={{width:"50%"}} 
+        value={inputFeedUrl}/>
+```
+
+The input field is now a controlled component and is read only because we haven't added any `onChange` handling.
+
+```javascript
+<input type="text" id="rssFeedUrl" name="rssFeedUrl"  style={{width:"50%"}} 
+        value={inputFeedUrl}
+        onChange={(event)=>setInputFeedUrl(event.target.value)}/>
+```
+
+The drop down for Choose a podcast can now use the state handler to set the `inputFeedUrl`.
+
+```javascript
+<select name="podcasts" id="podcasts" 
+      onChange={(event)=>setInputFeedUrl(event.target.value)}>
+```
+
+Now we have an `input` field controlled with React to allow the user to input an RSS Url, and which we can change the value of from a drop down of hard coded feed Urls.
+
+### Loading a Select element option from an Array
+
+It will be easier to maintain the drop down if the values were taken from an array. This would also open up the application to amending the URLs more easily at run time.
+
+```javascript
+const [feedUrls, setFeedUrls] = useState(
+  [
+    {name: "WebRush", url:"https://feeds.simplecast.com/tOjNXec5"},
+    {name: "The Evil Tester Show", url:"https://feed.pod.co/the-evil-tester-show"},
+  ]
+);
+```
+
+Because JSX supports arrays we can directly convert this `feedUrls` array into a set of `option` elements.
+
+```javascript
+{feedUrls.map((feed) =>
+  <option value={feed.url}>{feed.name}</option>)}
+```
+
+The final thing to do is to set the selected value in the options based on the `inputFeedUrl`:
+
+```javascript
+{feedUrls.map((feed) =>
+  <option value={feed.url}
+    selected={feed.url===inputFeedUrl}
+  >{feed.name}</option>)}
+```
+
+The full JSX for the podcast drop down looks like this:
+
+```javascript
+<div>
+  <label htmlFor="podcasts">Choose a podcast:</label>
+  <select name="podcasts" id="podcasts" 
+        onChange={(event)=>setInputFeedUrl(event.target.value)}>
+        {feedUrls.map((feed) =>
+          <option value={feed.url}
+            selected={feed.url===inputFeedUrl}
+          >{feed.name}</option>)}
+  </select>
+</div>
+```
+
+Now it is easier to build up a list of recommended podcasts, which we know have feeds that are CORS compatible:
+
+- [WebRush](https://feeds.simplecast.com/tOjNXec5)
+- [The Evil Tester Show](https://feed.pod.co/the-evil-tester-show)
+- [The Change log](https://changelog.com/podcast/feed)
+- [JS Party](https://changelog.com/jsparty/feed)
+- [Founders Talk](https://changelog.com/founderstalk/feed)
+- [Syntax FM](https://feed.syntax.fm/rss)
+
+I do recommend some other excellent podcasts but they I couldn't find a CORS compatible RSS feed e.g. [JavaScript Jabber](https://devchat.tv/show/javascript-jabber/)
+
+My final `App.js` looks like the following
+
+```javascript
+import './App.css';
+import React, {useState} from 'react';
+import {PodcastGrid} from './PodcastGrid';
+
+function App() {
+
+  const [inputFeedUrl, setInputFeedUrl] = useState("https://feeds.simplecast.com/tOjNXec5");
+  const [rssFeed, setRssFeed] = useState("");
+  const [quickFilter, setQuickFilter] = useState("");
+  const [feedUrls, setFeedUrls] = useState(
+            [
+              {name: "WebRush", url:"https://feeds.simplecast.com/tOjNXec5"},
+              {name: "The Evil Tester Show", url:"https://feed.pod.co/the-evil-tester-show"},
+              {name: "The Change log", url:"https://changelog.com/podcast/feed"},
+              {name: "JS Party", url: "https://changelog.com/jsparty/feed"},
+              {name: "Founders Talk", url:"https://changelog.com/founderstalk/feed"},
+              {name: "Syntax FM", url:"https://feed.syntax.fm/rss"}
+            ]
+  );
+
+  const handleLoadFeedClick = ()=>{
+    const inputRssFeed = document.getElementById("rssFeedUrl").value;
+    setRssFeed(inputRssFeed);
+  }
+
+  const handleFilterChange = (event)=>{
+    setQuickFilter(event.target.value);
+  }
+
+
+  return (
+    <div className="App">
+      <h1>Podcast Player</h1>
+      <div>
+        <label htmlFor="podcasts">Choose a podcast:</label>
+        <select name="podcasts" id="podcasts" 
+              onChange={(event)=>setInputFeedUrl(event.target.value)}>
+              {feedUrls.map((feed) =>
+                <option value={feed.url}
+                  selected={feed.url===inputFeedUrl}
+                >{feed.name}</option>)}
+        </select>
+      </div>
+      <div>
+        <label htmlFor="rssFeedUrl">RSS Feed URL:</label>
+        <input type="text" id="rssFeedUrl" name="rssFeedUrl"  style={{width:"50%"}} 
+                value={inputFeedUrl}
+                onChange={(event)=>setInputFeedUrl(event.target.value)}/>
+        <button onClick={handleLoadFeedClick}>Load Feed</button>
+      </div>
+      <div>
+      <label htmlFor="quickfilter">Quick Filter:</label>
+        <input type="text" id="quickfilter" name="quickfilter" style={{width:"30%"}} value={quickFilter}
+              onChange={handleFilterChange}/>        
+      </div>
+      <div>
+        <PodcastGrid rssfeed = {rssFeed}
+                     height="500px" width="100%"     
+                     quickFilter = {quickFilter}   
+      ></PodcastGrid>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+
+
 
 ## Summary
 
