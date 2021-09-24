@@ -712,6 +712,53 @@ Now I have the ability to:
 - play the podcast episode
 - sort the feed to order the episodes
 
+### Testing Library `App.test.js`
+
+One thing to do at this point is to amend the `App.test.js` class.
+
+A full introduction to the [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) is beyond the scope of this tutorial, but we can keep the default test created by `create-react-app` working.
+
+By default the `create-react-app` creates a single test for the `App.js` component. This is in the `App.test.js` file.
+
+Having changed `App.js` if we run `npm test` we will be told that our project is failing to pass its test.
+
+This is because the default test, checks the header displayed on screen.
+
+
+```javascript
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+```
+
+The default test, shown above:
+
+- is called `renders learn react link`.
+- renders the `App` component.
+- gets the element on the screen which contains the text "learn react".
+- asserts that the element (linkElement) is present, and if not, fails the test.
+
+Because I changed the output from the `App.js`, and even though I'm not doing TDD, I can still amend the test to keep the project build working.
+
+I amended the test to be:
+
+```javascript
+test('renders the app', () => {
+  render(<App />);
+  const headerElement = screen.getByText(/Podcast Player/i);
+  expect(headerElement).toBeInTheDocument();
+});
+```
+
+This finds the header title, and asserts that it is in the document.
+
+Admittedly it isn't much of a test, but it keeps the tests running until we are ready to expand them out to cover the application behaviour.
+
 ### CORS
 
 This RSS reader will not work with all Podcast feeds.
@@ -1099,16 +1146,29 @@ Because JSX supports arrays we can directly convert this `feedUrls` array into a
 
 ```javascript
 {feedUrls.map((feed) =>
-  <option value={feed.url}>{feed.name}</option>)}
+  <option value={feed.url} key={feed.url}>
+    {feed.name}</option>)}
 ```
 
-The final thing to do is to set the selected value in the options based on the `inputFeedUrl`:
+I add a `key` property because when creating JSX components from an array, React uses the `key` property to help determine which parts of the HTML need to be re-rendered.
+
+
+The final thing to do is to set the selected value in the options based on the `inputFeedUrl`.
+
+if I was using JavaScript directly then I would set the `selected` attribute on the option.
 
 ```javascript
 {feedUrls.map((feed) =>
-  <option value={feed.url}
+  <option value={feed.url}  key={feed.url}
     selected={feed.url===inputFeedUrl}
   >{feed.name}</option>)}
+```
+
+With React and JSX, to set the selected value for a `select` we set the `value` of the `select` element.
+
+```javascript
+<select name="podcasts" id="podcasts" value={inputFeedUrl}
+      onChange={(event)=>setInputFeedUrl(event.target.value)}>
 ```
 
 The full JSX for the podcast drop down looks like this:
@@ -1116,11 +1176,10 @@ The full JSX for the podcast drop down looks like this:
 ```javascript
 <div>
   <label htmlFor="podcasts">Choose a podcast:</label>
-  <select name="podcasts" id="podcasts" 
+  <select name="podcasts" id="podcasts" value={inputFeedUrl}
         onChange={(event)=>setInputFeedUrl(event.target.value)}>
         {feedUrls.map((feed) =>
-          <option value={feed.url}
-            selected={feed.url===inputFeedUrl}
+          <option value={feed.url} key={feed.url}
           >{feed.name}</option>)}
   </select>
 </div>

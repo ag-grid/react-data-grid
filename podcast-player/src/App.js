@@ -33,11 +33,10 @@ function App() {
       <h1>Podcast Player</h1>
       <div>
         <label htmlFor="podcasts">Choose a podcast:</label>
-        <select name="podcasts" id="podcasts" 
+        <select name="podcasts" id="podcasts" value={inputFeedUrl}
               onChange={(event)=>setInputFeedUrl(event.target.value)}>
               {feedUrls.map((feed) =>
-                <option value={feed.url}
-                  selected={feed.url===inputFeedUrl}
+                <option value={feed.url} key={feed.url}
                 >{feed.name}</option>)}
         </select>
       </div>

@@ -3,6 +3,6 @@ import App from './App';
 
 test('renders the app', () => {
   render(<App />);
-  const linkElement = screen.getByText(/Podcast Player/i);
-  expect(linkElement).toBeInTheDocument();
+  const headerElement = screen.getByText(/Podcast Player/i);
+  expect(headerElement).toBeInTheDocument();
 });
