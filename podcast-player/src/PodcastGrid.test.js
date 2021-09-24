@@ -21,7 +21,7 @@ afterEach(() => {
 });
 
 
-it("renders user data", async () => {
+it("renders user data from a url", async () => {
     const fakeRSSFeed = 
     `<channel>
         <item>
@@ -50,9 +50,35 @@ it("renders user data", async () => {
 
 
     await waitFor(() => {
-      expect(screen.querySelector(".ag-cell-value").textContent).toContain("Fake Episode");
+      expect(document.querySelector(".ag-cell-value").textContent).toContain("Fake Episode");
     });
+
+    // get pagination and check counts - there can be only 1 (because that's all we mocked)
+    const paginationPanel = document.querySelector(".ag-paging-panel");
+    const panelId = paginationPanel.getAttribute("id");
+    expect(document.querySelector(`#${panelId}-first-row`).textContent).toContain("1");
+    expect(document.querySelector(`#${panelId}-last-row`).textContent).toContain("1");
+    expect(document.querySelector(`#${panelId}-row-count`).textContent).toContain("1");
     
+    const getRowCellNamed = (rowId, cellName)=>{
+      console.log(`.ag-row[row-id="${rowId}"] .ag-cell[col-id="${cellName}"]`); // .ag-cell-value
+      return document.querySelector(`.ag-row[row-id="${rowId}"] .ag-cell[col-id="${cellName}"]`); // .ag-cell-value
+    }
+
+    const getCellValue = (cell)=>{
+      return cell.querySelector(".ag-cell-value");
+    }
+
+    expect(getCellValue(getRowCellNamed("0","title")).textContent).toEqual("Fake Episode");
+    // the audio component may take a little extra time to render
+    await waitFor(() => {
+        expect(getRowCellNamed("0","mp3").
+                querySelector("audio source").
+                    getAttribute("src")).
+                      toEqual("https://eviltester.com")
+      }
+    )
+
     // remove the mock to ensure tests are completely isolated
     global.fetch.mockRestore();
   });
