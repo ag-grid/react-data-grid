@@ -1,5 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import App from './App';
+import userEvent from '@testing-library/user-event'
+import * as AgGridTest from "./AgGridTestUtils"
 
 test('renders the app', () => {
   render(<App />);
@@ -7,15 +9,109 @@ test('renders the app', () => {
   expect(headerElement).toBeInTheDocument();
 });
 
-it("default value is shown in the text feed and select", async () => {
+it("shows default value text feed url field", async () => {
   render(<App />);
 
   const feedUrl = screen.getByLabelText("RSS Feed URL:");
   expect(feedUrl).toBeInTheDocument();
   expect(feedUrl.value).toEqual("https://feeds.simplecast.com/tOjNXec5");
+});
+
+it("shows default value in select", async () => {
+  render(<App />);
 
   const select = screen.getByLabelText("Choose a podcast:");
   expect(select).toBeInTheDocument();
   expect(select.options[select.selectedIndex].text).toEqual("WebRush");
 });
 
+
+// using user event https://testing-library.com/docs/ecosystem-user-event
+it("changes url in feed when select chosen", async () => {
+  render(<App />);
+
+  userEvent.selectOptions(screen.getByLabelText("Choose a podcast:"),'The Evil Tester Show');
+
+  const displayedFeedUrl = screen.getByLabelText("RSS Feed URL:");
+  expect(displayedFeedUrl.value).toEqual("https://feed.pod.co/the-evil-tester-show");
+});
+
+it("has no selected option when url in feed does not match a select because the first will be shown", async () => {
+  render(<App />);
+
+  const select = screen.getByLabelText("Choose a podcast:");
+  userEvent.selectOptions(select,'The Evil Tester Show');
+
+  const displayedFeedUrl = screen.getByLabelText("RSS Feed URL:");
+  expect(displayedFeedUrl.value).toEqual("https://feed.pod.co/the-evil-tester-show");
+
+  expect(select.options[select.selectedIndex].text).toEqual("The Evil Tester Show");
+  userEvent.type(displayedFeedUrl, 'Hello')
+  expect(select.options[select.selectedIndex].text).toEqual("WebRush");
+  expect(displayedFeedUrl.value).toContain("Hello");
+});
+
+// when button clicked the feed is loaded into the grid
+it("loads feed into grid when button pressed", async () => {
+
+
+
+  const fakeEvilFeed = 
+  `<channel>
+      <item>
+          <title>Fake Evil Tester Episode</title>
+          <pubDate>Thu, 23 Sep 2021 10:00:00 +0000</pubDate>
+          <enclosure url="https://eviltester.com"/>
+          <description>
+          <![CDATA[ <p>Fake Evil Tester Description</p> ]]>
+          </description>
+      </item>
+  </channel>`;
+
+  const fakeWebrushFeed = 
+  `<channel>
+      <item>
+          <title>Fake WebRush Episode</title>
+          <pubDate>Thu, 27 Sep 2021 10:00:00 +0000</pubDate>
+          <enclosure url="https://webrush.io"/>
+          <description>
+          <![CDATA[ <p>Fake WebRush Description</p> ]]>
+          </description>
+      </item>
+  </channel>`;
+
+  jest.spyOn(window, "fetch").mockImplementation(() =>{
+
+    let returnedRssFeed = fakeWebrushFeed;
+
+    const displayedFeedUrl = screen.getByLabelText("RSS Feed URL:");
+    if(displayedFeedUrl.value==="https://feed.pod.co/the-evil-tester-show"){
+      returnedRssFeed = fakeEvilFeed;
+    }
+
+    return Promise.resolve(
+      {
+      text: () => returnedRssFeed
+    })}
+  );
+
+
+  render(<App />);
+
+  userEvent.selectOptions(screen.getByLabelText("Choose a podcast:"),'The Evil Tester Show');
+
+  const loadButton = screen.getByText("Load Feed");
+  userEvent.click(loadButton);
+
+
+  await AgGridTest.waitForGridToBeInTheDOM();
+
+  // wait for first cell to expected data
+  await waitFor(() => {
+    expect(document.querySelector(".ag-cell-value").textContent).toContain("Fake Evil Tester Episode");
+  });
+
+
+  // remove the mock to ensure tests are completely isolated
+  global.fetch.mockRestore();
+});
