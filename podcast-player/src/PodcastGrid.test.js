@@ -50,24 +50,20 @@ it("renders user data from a url", async () => {
     })
 
 
-    // wait for grid to be in the DOM
-    await waitFor(() => {
-      expect(document.querySelector(".ag-root-wrapper")).toBeInTheDocument();
-    });
+    await AgGridTest.waitForGridToBeInTheDOM();
 
     // wait for first cell to expected data
     await waitFor(() => {
       expect(document.querySelector(".ag-cell-value").textContent).toContain("Fake Episode");
     });
 
-    // get pagination and check counts - there can be only 1 (because that's all we mocked)
-    const paginationPanel = document.querySelector(".ag-paging-panel");
-    const panelId = paginationPanel.getAttribute("id");
-    expect(document.querySelector(`#${panelId}-first-row`).textContent).toContain("1");
-    expect(document.querySelector(`#${panelId}-last-row`).textContent).toContain("1");
-    expect(document.querySelector(`#${panelId}-row-count`).textContent).toContain("1");
+    await AgGridTest.waitForPagination().
+    then((pagination)=>{
+      expect(pagination.firstRow).toEqual("1");
+      expect(pagination.lastRow).toEqual("1");
+      expect(pagination.rowCount).toEqual("1");  
+    });
     
-
 
     expect(AgGridTest.getCellValue(AgGridTest.getRowCellNamed("0","title")).textContent).toEqual("Fake Episode");
 
@@ -121,27 +117,21 @@ it("renders user data from a url", async () => {
     })
 
 
-    // wait for grid to be in the DOM
-    await waitFor(() => {
-      expect(document.querySelector(".ag-root-wrapper")).toBeInTheDocument();
-    });
+    await AgGridTest.waitForGridToBeInTheDOM();
 
     // wait for first cell to expected data
     await waitFor(() => {
       expect(document.querySelector(".ag-cell-value").textContent).toContain("Filtered Episode");
     });
 
-    // get pagination and check counts - there can be only 1 (because that's all we mocked)
-    const paginationPanel = document.querySelector(".ag-paging-panel");
-    const panelId = paginationPanel.getAttribute("id");
-    expect(document.querySelector(`#${panelId}-first-row`).textContent).toContain("1");
-    expect(document.querySelector(`#${panelId}-last-row`).textContent).toContain("1");
-    expect(document.querySelector(`#${panelId}-row-count`).textContent).toContain("1");
+    await AgGridTest.waitForPagination().
+    then((pagination)=>{
+      expect(pagination.firstRow).toEqual("1");
+      expect(pagination.lastRow).toEqual("1");
+      expect(pagination.rowCount).toEqual("1");  
+    });
+
     
-
-    // helper method to find a row id and cell named in that row
-
-
     let foundRowId = undefined;
     await waitFor(() => {
         const row = AgGridTest.getRowWithNamedCellValue("title", "Filtered Episode");
@@ -181,23 +171,21 @@ it("renders user data from a url", async () => {
     })
 
 
-    // wait for grid to be in the DOM
-    await waitFor(() => {
-      expect(document.querySelector(".ag-root-wrapper")).toBeInTheDocument();
-    });
+    await AgGridTest.waitForGridToBeInTheDOM();
 
     // wait for first cell to expected data
     await waitFor(() => {
       expect(document.querySelector(".ag-cell-value").textContent).toContain("Fake Episode");
     });
 
-    // get pagination and check counts - there can be only 1 (because that's all we mocked)
-    const paginationPanel = document.querySelector(".ag-paging-panel");
-    const panelId = paginationPanel.getAttribute("id");
-    expect(document.querySelector(`#${panelId}-first-row`).textContent).toContain("1");
-    expect(document.querySelector(`#${panelId}-last-row`).textContent).toContain("2");
-    expect(document.querySelector(`#${panelId}-row-count`).textContent).toContain("2");
     
+    await AgGridTest.waitForPagination().
+    then((pagination)=>{
+      expect(pagination.firstRow).toEqual("1");
+      expect(pagination.lastRow).toEqual("2");
+      expect(pagination.rowCount).toEqual("2");  
+    });
+
     await waitFor(() => {
         const row = AgGridTest.getRowWithNamedCellValue("title", "Filtered Episode");
         expect(row).toBeDefined();

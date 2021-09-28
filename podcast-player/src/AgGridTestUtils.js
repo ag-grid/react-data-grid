@@ -1,3 +1,40 @@
+import {waitFor} from '@testing-library/react'
+
+// TODO: create parent div reference to handle multiple grids on a page
+// Synchronisation
+
+const waitForGridToBeInTheDOM=()=>{
+    return waitFor(() => {
+      expect(document.querySelector(".ag-root-wrapper")).toBeInTheDocument();
+    });
+  }
+
+
+
+const waitForPagination=()=>{
+
+   return new Promise((resolve, reject)=>{
+
+    let paginationPanel = undefined;
+
+    waitFor(() => {
+      paginationPanel = document.querySelector(".ag-paging-panel");  
+      expect(paginationPanel).toBeInTheDocument();}).then(()=>{
+        const panelId = paginationPanel.getAttribute("id");
+        const panelData = {panelId: panelId};
+    
+        panelData.firstRow = document.querySelector(`#${panelId}-first-row`).textContent;
+        panelData.lastRow = document.querySelector(`#${panelId}-last-row`).textContent;
+        panelData.rowCount = document.querySelector(`#${panelId}-row-count`).textContent;
+        resolve(panelData);
+      }).catch((err)=>reject(err))
+  
+  
+   });
+}
+
+
+
 // helper method to find a row id and cell named in that row
 const getRowCellNamed = (rowId, cellName)=>{
     return document.querySelector(`.ag-row[row-id="${rowId}"] .ag-cell[col-id="${cellName}"]`); // .ag-cell-value
@@ -39,7 +76,14 @@ const getRowWithNamedCellValue = (cellName, cellValue)=>{
     return undefined;
 }
 
+
+
+
 export{
+
+    waitForGridToBeInTheDOM,
+    waitForPagination,
+
     getRowWithNamedCellValue, 
     getNamedCellsWithValues, 
     findFirstContainerElementWithClass, 
