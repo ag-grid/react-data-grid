@@ -54,8 +54,6 @@ it("has no selected option when url in feed does not match a select because the 
 // when button clicked the feed is loaded into the grid
 it("loads feed into grid when button pressed", async () => {
 
-
-
   const fakeEvilFeed = 
   `<channel>
       <item>
@@ -82,18 +80,15 @@ it("loads feed into grid when button pressed", async () => {
 
   jest.spyOn(window, "fetch").mockImplementation(() =>{
 
-    let returnedRssFeed = fakeWebrushFeed;
-
     const displayedFeedUrl = screen.getByLabelText("RSS Feed URL:");
+
     if(displayedFeedUrl.value==="https://feed.pod.co/the-evil-tester-show"){
-      returnedRssFeed = fakeEvilFeed;
+      return Promise.resolve({text: () => fakeEvilFeed});
+    }else{
+      return Promise.resolve({text: () => fakeWebrushFeed});
     }
 
-    return Promise.resolve(
-      {
-      text: () => returnedRssFeed
-    })}
-  );
+  });
 
 
   render(<App />);
