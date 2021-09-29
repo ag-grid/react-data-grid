@@ -1,25 +1,8 @@
 import React from "react";
-import { unmountComponentAtNode } from "react-dom";
-import {render, waitFor, screen, getAllByDisplayValue} from '@testing-library/react'
+import {render, waitFor} from '@testing-library/react'
 
 import {PodcastGrid} from './PodcastGrid';
-import { act } from "react-dom/test-utils";
 import * as AgGridTest from "./AgGridTestUtils"
-
-
-let container = null;
-beforeEach(async () => {
-  // setup a DOM element as a render target
-  container = document.createElement("div");
-  document.body.appendChild(container);
-});
-
-afterEach(() => {
-  // cleanup on exiting
-  unmountComponentAtNode(container);
-  container.remove();
-  container = null;
-});
 
 
 it("renders user data from a url", async () => {
@@ -41,21 +24,15 @@ it("renders user data from a url", async () => {
       })}
     );
   
-    await act(async () => {
-      render(<PodcastGrid 
-        rssfeed="https://fakefeed"
-        height="500px"
-        width="100%"     
-        quickFilter=""/>, container);
-    })
+    render(<PodcastGrid 
+      rssfeed="https://fakefeed"
+      height="500px"
+      width="100%"     
+      quickFilter=""/>);
 
 
     await AgGridTest.waitForGridToBeInTheDOM();
-
-    // wait for first cell to expected data
-    await waitFor(() => {
-      expect(document.querySelector(".ag-cell-value").textContent).toContain("Fake Episode");
-    });
+    await AgGridTest.waitForDataToHaveLoaded();
 
     await AgGridTest.waitForPagination().
     then((pagination)=>{
@@ -64,15 +41,13 @@ it("renders user data from a url", async () => {
       expect(pagination.rowCount).toEqual("1");  
     });
     
-
-    expect(AgGridTest.getCellValue(AgGridTest.getRowCellNamed("0","title")).textContent).toEqual("Fake Episode");
-
-    // the audio component may take a little extra time to render
+    // the audio component may take a little extra time to render so waitFor it
     await waitFor(() => {
-        expect(AgGridTest.getRowCellNamed("0","mp3").
-                querySelector("audio source").
-                    getAttribute("src")).
-                      toEqual("https://eviltester.com")
+        expect(AgGridTest.getFirstRowWithNamedCellValue("title", "Fake Episode").
+                querySelector(AgGridTest.columnNamed('mp3')).
+                  querySelector("audio source").
+                      getAttribute("src")).
+                        toEqual("https://eviltester.com")
       }
     )
 
@@ -100,29 +75,22 @@ it("renders user data from a url", async () => {
 </channel>`;
 
   it("applies a quick filter", async () => {
-    const fakeRSSFeed = rssFeedForFiltering;
 
     jest.spyOn(window, "fetch").mockImplementation(() =>{
       return Promise.resolve({
-        text: () => fakeRSSFeed
+        text: () => rssFeedForFiltering
       })}
     );
   
-    await act(async () => {
-      render(<PodcastGrid 
-        rssfeed="https://fakefeed"
-        height="500px"
-        width="100%"     
-        quickFilter="Filtered"/>, container);
-    })
+    render(<PodcastGrid 
+      rssfeed="https://fakefeed"
+      height="500px"
+      width="100%"     
+      quickFilter="Filtered"/>); 
 
 
     await AgGridTest.waitForGridToBeInTheDOM();
-
-    // wait for first cell to expected data
-    await waitFor(() => {
-      expect(document.querySelector(".ag-cell-value").textContent).toContain("Filtered Episode");
-    });
+    await AgGridTest.waitForDataToHaveLoaded();
 
     await AgGridTest.waitForPagination().
     then((pagination)=>{
@@ -131,17 +99,10 @@ it("renders user data from a url", async () => {
       expect(pagination.rowCount).toEqual("1");  
     });
 
-    
-    let foundRowId = undefined;
-    await waitFor(() => {
-        const row = AgGridTest.getRowWithNamedCellValue("title", "Filtered Episode");
-        expect(row).toBeDefined();
-        foundRowId = row.getAttribute("row-id");
-    })
-
     // the audio component may take a little extra time to render
     await waitFor(() => {
-        expect(AgGridTest.getRowCellNamed(foundRowId,"mp3").
+        expect(AgGridTest.getFirstRowWithNamedCellValue("title", "Filtered Episode").
+                querySelector(AgGridTest.columnNamed('mp3')).
                 querySelector("audio source").
                     getAttribute("src")).
                       toEqual("https://eviltester.com/filtered")
@@ -154,31 +115,23 @@ it("renders user data from a url", async () => {
 
 
   it("without filter it displays all rows", async () => {
-    const fakeRSSFeed = rssFeedForFiltering;
 
     jest.spyOn(window, "fetch").mockImplementation(() =>{
       return Promise.resolve({
-        text: () => fakeRSSFeed
+        text: () => rssFeedForFiltering
       })}
     );
   
-    await act(async () => {
-      render(<PodcastGrid 
-        rssfeed="https://fakefeed"
-        height="500px"
-        width="100%"     
-        quickFilter=""/>, container);
-    })
-
+    render(<PodcastGrid 
+      rssfeed="https://fakefeed"
+      height="500px"
+      width="100%"     
+      quickFilter=""/>); 
 
     await AgGridTest.waitForGridToBeInTheDOM();
+    await AgGridTest.waitForDataToHaveLoaded();
 
-    // wait for first cell to expected data
-    await waitFor(() => {
-      expect(document.querySelector(".ag-cell-value").textContent).toContain("Fake Episode");
-    });
-
-    
+    // expect two rows to be displayed
     await AgGridTest.waitForPagination().
     then((pagination)=>{
       expect(pagination.firstRow).toEqual("1");
@@ -186,15 +139,9 @@ it("renders user data from a url", async () => {
       expect(pagination.rowCount).toEqual("2");  
     });
 
-    await waitFor(() => {
-        const row = AgGridTest.getRowWithNamedCellValue("title", "Filtered Episode");
-        expect(row).toBeDefined();
-    })
+    expect(AgGridTest.getNamedCellsWithValues("title", "Fake Episode").length).toEqual(1);
+    expect(AgGridTest.getNamedCellsWithValues("title", "Filtered Episode").length).toEqual(1);
 
-    await waitFor(() => {
-      const row = AgGridTest.getRowWithNamedCellValue("title", "Fake Episode");
-      expect(row).toBeDefined();
-  })
 
   // remove the mock to ensure tests are completely isolated
     global.fetch.mockRestore();

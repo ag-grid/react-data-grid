@@ -78,16 +78,13 @@ it("loads feed into grid when button pressed", async () => {
       </item>
   </channel>`;
 
-  jest.spyOn(window, "fetch").mockImplementation(() =>{
+  jest.spyOn(window, "fetch").mockImplementation((aUrl) =>{
 
-    const displayedFeedUrl = screen.getByLabelText("RSS Feed URL:");
-
-    if(displayedFeedUrl.value==="https://feed.pod.co/the-evil-tester-show"){
+    if(aUrl==="https://feed.pod.co/the-evil-tester-show"){
       return Promise.resolve({text: () => fakeEvilFeed});
     }else{
       return Promise.resolve({text: () => fakeWebrushFeed});
     }
-
   });
 
 
@@ -98,12 +95,12 @@ it("loads feed into grid when button pressed", async () => {
   const loadButton = screen.getByText("Load Feed");
   userEvent.click(loadButton);
 
-
   await AgGridTest.waitForGridToBeInTheDOM();
+  await AgGridTest.waitForDataToHaveLoaded();
 
   // wait for first cell to expected data
   await waitFor(() => {
-    expect(document.querySelector(".ag-cell-value").textContent).toContain("Fake Evil Tester Episode");
+    expect(AgGridTest.getNamedCellsWithValues("title", "Fake Evil Tester Episode").length).toEqual(1);
   });
 
 

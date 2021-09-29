@@ -11,6 +11,12 @@ export function PodcastGrid(props) {
 
     useEffect(()=>{
 
+      if(!props.rssfeed)
+        return;
+
+      if(props.rssfeed.trim()=="")
+        return;
+
       fetch(props.rssfeed)
                 .then(response => response.text())
                 .then(str => new window.DOMParser().parseFromString(str, 'text/xml'))

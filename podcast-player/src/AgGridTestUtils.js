@@ -7,8 +7,14 @@ const waitForGridToBeInTheDOM=()=>{
     return waitFor(() => {
       expect(document.querySelector(".ag-root-wrapper")).toBeInTheDocument();
     });
-  }
+}
 
+// since our grid starts with no data, when the overlay has gone, data has loaded
+const waitForDataToHaveLoaded=()=>{
+  return waitFor(()=>{
+    expect(document.querySelector(".ag-overlay-no-rows-center")).toBeNull();
+  });
+}
 
 
 const waitForPagination=()=>{
@@ -28,16 +34,20 @@ const waitForPagination=()=>{
         panelData.rowCount = document.querySelector(`#${panelId}-row-count`).textContent;
         resolve(panelData);
       }).catch((err)=>reject(err))
-  
-  
    });
 }
 
+const columnNamed = (cellName)=>{
+  return `.ag-cell[col-id="${cellName}"]`
+}
 
+const rowWithId = (rowId)=>{
+  return `.ag-row[row-id="${rowId}"]`
+}
 
 // helper method to find a row id and cell named in that row
 const getRowCellNamed = (rowId, cellName)=>{
-    return document.querySelector(`.ag-row[row-id="${rowId}"] .ag-cell[col-id="${cellName}"]`); // .ag-cell-value
+    return document.querySelector( rowWithId(rowId) + " " + columnNamed(cellName));
   }
   
   // given a cell, get the value of the cell
@@ -61,12 +71,14 @@ const findFirstContainerElementWithClass = (anElement, findClassName)=>{
 }
   
   
+
+
 const getNamedCellsWithValues = (cellName, cellValue)=>{
-    const cells = Array.from(document.querySelectorAll(`.ag-cell[col-id="${cellName}"]`));
+    const cells = Array.from(document.querySelectorAll(columnNamed(cellName)));
     return cells.filter(cell => getCellValue(cell).textContent==cellValue);
 }
   
-const getRowWithNamedCellValue = (cellName, cellValue)=>{
+const getFirstRowWithNamedCellValue = (cellName, cellValue)=>{
     const cells = getNamedCellsWithValues(cellName, cellValue);
     for(const cell of cells){
       if(getCellValue(cell).textContent==cellValue){
@@ -81,10 +93,15 @@ const getRowWithNamedCellValue = (cellName, cellValue)=>{
 
 export{
 
+    // synchronisation methods
     waitForGridToBeInTheDOM,
     waitForPagination,
+    waitForDataToHaveLoaded,
 
-    getRowWithNamedCellValue, 
+    // selectors
+    columnNamed,
+
+    getFirstRowWithNamedCellValue, 
     getNamedCellsWithValues, 
     findFirstContainerElementWithClass, 
     getCellValue, 
