@@ -144,7 +144,6 @@ return (
 At this point my Grid won't display anything, but it should be visible on the screen and I know that I have correctly added AG Grid into my React project.
 
 If anything failed at this point, I would check my React installation, and possibly work through the [AG Grid React Getting Started Documentation](https://www.ag-grid.com/react-data-grid/getting-started/) or [Tutorial Blog Post](https://blog.ag-grid.com/getting-started-with-react-hooks-and-ag-grid-in-5-minutes/).
-
 ### Rendering Data on the Grid
 
 The next step of working iteratively for me is to create a grid that will render some data, using the columns that I specified earlier.
@@ -267,6 +266,9 @@ export function PodcastGrid(props) {
 
 The next step is to move from hard coded data, to dynamically loading the data from an RSS Feed.
 
+- [version 1 code](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v1)
+- [.dev version 1 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v1)
+- [live deployed version](https://ag-grid.github.io/react-data-grid/podcast-player/v1/index.html)
 ## Version 2 - Render an RSS feed in AG Grid
 
 The next thing I want to do is load an RSS feed into the grid.
@@ -580,6 +582,10 @@ export function PodcastGrid(props) {
 
 The next step is to support playing the podcast.
 
+- [version 2 code](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v2)
+- [.dev version 2 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v2)
+- [live deployed version 2](https://ag-grid.github.io/react-data-grid/podcast-player/v2/index.html)
+
 ## Version 3 - Play The Podcast
 
 For Version 3, to allow people to play the podcast audio, I'm going to do this as simply as possible and create a custom cell renderer for the mp3 field.
@@ -625,6 +631,10 @@ And I add this `cellRenderer` to the `mp3` column definition.
 ```
 
 Making the grid now a functional Podcast player.
+
+- [version 3 code](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v3)
+- [.dev version 3 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v3)
+- [live deployed version 3](https://ag-grid.github.io/react-data-grid/podcast-player/v3/index.html)
 
 ## Version 4 - Customising the RSS Feed
 
@@ -711,6 +721,12 @@ Now I have the ability to:
 - load the feed into a React Data Grid
 - play the podcast episode
 - sort the feed to order the episodes
+
+Find online:
+
+- [version 4 code](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v4)
+- [.dev version 4 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v4)
+- [live deployed version 4](https://ag-grid.github.io/react-data-grid/podcast-player/v4/index.html)
 
 ### Testing Library `App.test.js`
 
@@ -1032,6 +1048,11 @@ When the `gridApi` has been set, and the property `quickFilter` changes, we will
 
 This provides a very dynamic and clean way of identifying podcasts that include certain words in the description.
 
+Find online:
+
+- [version 5 code](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v5)
+- [.dev version 5 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v5)
+- [live deployed version 5](https://ag-grid.github.io/react-data-grid/podcast-player/v5/index.html)
 
 ## Version 6 - Pagination
 
@@ -1069,6 +1090,11 @@ paginationAutoPageSize={true}
 
 Again, i've only added a few extra properties to the Data Grid, but have immediately made the application more usable, with minimal development effort.
 
+Find online:
+
+- [version 6 code](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v6)
+- [.dev version 6 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v6)
+- [live deployed version 6](https://ag-grid.github.io/react-data-grid/podcast-player/v6/index.html)
 ## Version 7 - Podcast List
 
 I think it would be useful to create a list of podcasts that I listen to, so I don't have to type in the URL each time.
@@ -1268,7 +1294,11 @@ export default App;
 
 ```
 
+Find online:
 
+- [version 7 code](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v7)
+- [.dev version 7 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v7)
+- [live deployed version 7](https://ag-grid.github.io/react-data-grid/podcast-player/v7/index.html)
 
 
 ## Summary
