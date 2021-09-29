@@ -1308,17 +1308,17 @@ Most of the functionality I was adding to the application was via out of the box
 
 What we learned:
 
-- incremental development using AG Grid
-- using fetch to populate an AG Grid
-- using AG Grid in React
-- adding a cell renderer in the column definitions
-- parsing RSS and XML using `DOMParser`
-- Impact of Cross-Origin Resource Sharing
-- Some top podcasts to listen to
-- Filtering column data
-- Using the AG Grid API in react
-- `quickFilter` operates on all rowData, not just the displayed data
-- adding pagination and row count to a Data Grid
+- Incremental development using AG Grid.
+- Using fetch to populate an AG Grid.
+- Using AG Grid in React.
+- Adding a cell renderer in the column definitions.
+- Parsing RSS and XML using `DOMParser`.
+- Impact of Cross-Origin Resource Sharing (CORS) from JavaScript.
+- Some top podcasts to listen to.
+- Filtering column data.
+- Using the AG Grid API in react.
+- `quickFilter` operates on all rowData, not just the displayed data.
+- Adding pagination and row count to a Data Grid.
 
 ## Available Scripts
 
