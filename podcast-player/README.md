@@ -797,8 +797,6 @@ I've listed a few of our favourite JavaScript and technical podcast feeds below,
     - https://changelog.com/jsparty/feed
 - Founders Talk
     - https://changelog.com/founderstalk/feed
-- Syntax FM
-    - https://feed.syntax.fm/rss  
 
 ## Version 5 - Searching and Filtering
 
@@ -1218,7 +1216,6 @@ Now it is easier to build up a list of recommended podcasts, which we know have 
 - [The Change log](https://changelog.com/podcast/feed)
 - [JS Party](https://changelog.com/jsparty/feed)
 - [Founders Talk](https://changelog.com/founderstalk/feed)
-- [Syntax FM](https://feed.syntax.fm/rss)
 
 I do recommend some other excellent podcasts but they I couldn't find a CORS compatible RSS feed e.g. [JavaScript Jabber](https://devchat.tv/show/javascript-jabber/)
 
@@ -1241,7 +1238,6 @@ function App() {
               {name: "The Change log", url:"https://changelog.com/podcast/feed"},
               {name: "JS Party", url: "https://changelog.com/jsparty/feed"},
               {name: "Founders Talk", url:"https://changelog.com/founderstalk/feed"},
-              {name: "Syntax FM", url:"https://feed.syntax.fm/rss"}
             ]
   );
 
@@ -1408,6 +1404,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 ## Notes
 
+### Bugs
+
+- https://feed.syntax.fm/rss fails to parse properly. Need some try catch around the XML processing and if no url or enclosure can be found, try the 'link' attribute and see if the is an mp3 file
+    - ` {name: "Syntax FM", url:"https://feed.syntax.fm/rss"}`
+
+### FeedReader
 
 If I want to push the FeedReader into a class to give me more options about which fields I render in the grid then I might expand it as follows:
 

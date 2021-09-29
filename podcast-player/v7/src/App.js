@@ -14,7 +14,6 @@ function App() {
               {name: "The Change log", url:"https://changelog.com/podcast/feed"},
               {name: "JS Party", url: "https://changelog.com/jsparty/feed"},
               {name: "Founders Talk", url:"https://changelog.com/founderstalk/feed"},
-              {name: "Syntax FM", url:"https://feed.syntax.fm/rss"}
             ]
   );
 
