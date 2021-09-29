@@ -1296,7 +1296,20 @@ What we learned:
 
 ## Available Scripts
 
-In the project directory, you can run:
+In each project directory, you can run:
+
+```
+npm install
+npm start
+```
+
+To run the version of the app.
+
+```
+npm run build
+```
+
+To create the deployable version in the build folder.
 
 ### `npm start`
 
