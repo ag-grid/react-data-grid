@@ -8,8 +8,13 @@ We'll build in small increments:
 - Load and render an RSS Feed in the Grid
 - Add an Audio Control to Play the podcast using a custom cell renderer
 - Allow the user to add the Podcast URL
+- Adding Sorting, Filtering, including filtering on data not displayed on the grid.
 
-Each increment allows us to expand on our knowledge of AG Grid and with one or two small code changes we can add a lot of value very quickly to the user.
+Each increment allows us to expand on our knowledge of AG Grid and with one or two small code changes we can add a lot of value very quickly to the user. Along the way we will see some of the decision processes involved in designing the app, and learn about Controlled and Uncontrolled Components in React.
+
+This is what we will be building:
+
+![v7-podcast-player-2021-09-30_09-12-07](https://blog.ag-grid.com/content/images/2021/09/v7-podcast-player-2021-09-30_09-12-07.png)
 
 ## Let's Create a Simple Podcast Listener in React with AG Grid
 
@@ -269,6 +274,11 @@ The next step is to move from hard coded data, to dynamically loading the data f
 - [version 1 code](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v1)
 - [.dev version 1 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v1)
 - [live deployed version](https://ag-grid.github.io/react-data-grid/podcast-player/v1/index.html)
+
+At this point our player is very simple:
+
+![v1-podcast-player-2021-09-30_09-06-20](https://blog.ag-grid.com/content/images/2021/09/v1-podcast-player-2021-09-30_09-06-20.png)
+
 ## Version 2 - Render an RSS feed in AG Grid
 
 The next thing I want to do is load an RSS feed into the grid.
@@ -586,6 +596,10 @@ The next step is to support playing the podcast.
 - [.dev version 2 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v2)
 - [live deployed version 2](https://ag-grid.github.io/react-data-grid/podcast-player/v2/index.html)
 
+We are now displaying the RSS details:
+
+![v2-podcast-player-2021-09-30_09-07-09](https://blog.ag-grid.com/content/images/2021/09/v2-podcast-player-2021-09-30_09-07-09.png)
+
 ## Version 3 - Play The Podcast
 
 For Version 3, to allow people to play the podcast audio, I'm going to do this as simply as possible and create a custom cell renderer for the mp3 field.
@@ -635,6 +649,10 @@ Making the grid now a functional Podcast player.
 - [version 3 code](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v3)
 - [.dev version 3 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v3)
 - [live deployed version 3](https://ag-grid.github.io/react-data-grid/podcast-player/v3/index.html)
+
+After adding the audio player:
+
+![v3-podcast-player-2021-09-30_09-07-43](https://blog.ag-grid.com/content/images/2021/09/v3-podcast-player-2021-09-30_09-07-43.png)
 
 ## Version 4 - Customising the RSS Feed
 
@@ -728,6 +746,9 @@ Find online:
 - [.dev version 4 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v4)
 - [live deployed version 4](https://ag-grid.github.io/react-data-grid/podcast-player/v4/index.html)
 
+Now with the ability to add a URL:
+
+![v4-podcast-player](https://blog.ag-grid.com/content/images/2021/09/v4-podcast-player.png)
 ### Testing Library `App.test.js`
 
 One thing to do at this point is to amend the `App.test.js` class.
@@ -1052,6 +1073,10 @@ Find online:
 - [.dev version 5 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v5)
 - [live deployed version 5](https://ag-grid.github.io/react-data-grid/podcast-player/v5/index.html)
 
+Ability to search and filter podcasts:
+
+![v5-podcast-player](https://blog.ag-grid.com/content/images/2021/09/v5-podcast-player.png)
+
 ## Version 6 - Pagination
 
 After using the app I realised that with so many podcast episodes in a feed, having all of the episodes in a single table was useful but I would have preferred the ability to page through them, and I'd like to see a count of all of the podcast episodes that are available in the feed.
@@ -1093,6 +1118,10 @@ Find online:
 - [version 6 code](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v6)
 - [.dev version 6 code](https://github.dev/ag-grid/react-data-grid/tree/main/podcast-player/v6)
 - [live deployed version 6](https://ag-grid.github.io/react-data-grid/podcast-player/v6/index.html)
+
+Pagination added:
+
+![v6-podcast-player](https://blog.ag-grid.com/content/images/2021/09/v6-podcast-player.png)
 ## Version 7 - Podcast List
 
 I think it would be useful to create a list of podcasts that I listen to, so I don't have to type in the URL each time.
@@ -1297,6 +1326,10 @@ Find online:
 - [live deployed version 7](https://ag-grid.github.io/react-data-grid/podcast-player/v7/index.html)
 
 
+With a list of podcasts:
+
+![v7-podcast-player-2021-09-30_09-12-07-1](https://blog.ag-grid.com/content/images/2021/09/v7-podcast-player-2021-09-30_09-12-07-1.png)
+
 ## Summary
 
 Obviously there is a lot more that we can improve, but... so long as you type in the correct URL, and the URL feed supports CORS access from other sites then, this is a very simple podcast reader.
@@ -1319,6 +1352,95 @@ What we learned:
 - Using the AG Grid API in react.
 - `quickFilter` operates on all rowData, not just the displayed data.
 - Adding pagination and row count to a Data Grid.
+
+To learn more about [AG Grid and the React UI](https://www.ag-grid.com/react-data-grid/getting-started/).
+
+---
+
+## Version 8 - Adding some test code
+
+The [Testing Library](https://testing-library.com/) is added to our project when we use `create-react-app`.
+
+We can run all the tests for our project with:
+
+```shell
+npm test
+```
+
+Since `create-react-app` creates a default test for each project in `App.test.js`, we may find that our tests are broken as soon as we start development.
+
+```javascript
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+```
+
+For this reason, a lot of people immediately delete the `App.test.js` file after creating their application with the `create-react-app` bootstrap.
+
+Instead, if we keep the test up to date with our application then we can gradually add more tests to our project without too much work.
+
+For the Podcast Player application, I amended the default test to read:
+
+```javascript
+test('renders the app', () => {
+  render(<App />);
+  const headerElement = screen.getByText(/Podcast Player/i);
+  expect(headerElement).toBeInTheDocument();
+});
+```
+
+This change doesn't really help me with my development, since it just looks on the page for the existence of some text, but since the text matches my `h1` I have a working test, which I can then use to learn more about the Testing Library.
+
+## The Testing Library
+
+The Testing Library is a set of packages to support testing UI components, without requiring a full browser or integrated environment.
+
+It consists of:
+
+- a core [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro) used for querying and interacting with the DOM.
+- frameworks libraries, which extend the core to handle the nuances of each framework.
+- support libraries e.g. `user-event` which makes it easier to simulate user interaction with the DOM.
+
+I'm using the [React](https://testing-library.com/docs/react-testing-library/intro) library, but [Angular](https://testing-library.com/docs/angular-testing-library/intro) and [Vue](https://testing-library.com/docs/vue-testing-library/intro) are covered amongst others.
+
+The Testing Library does not contain a test runner, but when `create-react-app` is used, [Jest](https://jestjs.io/) is configured as the default test runner.
+
+The default test created by `create-react-app`:
+
+```javascript
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+```
+
+- `test` comes from Jest and allows us to write 'tests' and report on pass/failures
+- `render` comes from the react wrapper of Testing Library and renders a React component in a virtual DOM, waiting for the initial events to complete.
+- `screen` comes from the core Testing Library and is a convenience object which maps to `document.body` and has the query methods provided by Testing Library pre-bound e.g. allowing `screen.getByText("Podcast")`
+- `expect` comes from Jest and allows creating assertions with [matchers](https://jestjs.io/docs/expect)
+- `toBeInTheDocument` is a matcher from the [jest-dom](https://testing-library.com/docs/ecosystem-jest-dom) library installed when we used `create-react-app`
+
+After using `create-react-app` most of the libraries are installed.
+
+To test the user interactions I also [installed the `user-event` and `dom` libraries](https://testing-library.com/docs/ecosystem-user-event):
+
+```
+npm install --save-dev @testing-library/user-event @testing-library/dom
+```
+
+
+References:
+
+- [You probably don't need act in your react tests](https://javascript.plainenglish.io/you-probably-dont-need-act-in-your-react-tests-2a0bcd2ad65c)
+- [React Testing Recipes](https://reactjs.org/docs/testing-recipes.html)
+
+
 
 ## Available Scripts
 
