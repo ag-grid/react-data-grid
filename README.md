@@ -28,7 +28,9 @@ See the Posts:
         - use [v5](https://ag-grid.github.io/react-data-grid/podcast-player/v5/index.html)
         - use [v6](https://ag-grid.github.io/react-data-grid/podcast-player/v6/index.html)
         - use [v7](https://ag-grid.github.io/react-data-grid/podcast-player/v7/index.html)
-
+- Create a Slider Puzzle Game using AG Grid and React
+    - [code in slider-game](https://github.com/ag-grid/react-data-grid/tree/main/slider-game)
+    - [Play the game here](https://ag-grid.github.io/react-data-grid/slider-game/index.html)
 
 Feel free to [clone, fork or download this repo](https://github.com/ag-grid/react-data-grid) to use as a base for learning about [AG Grid](https://ag-grid.com/).
 
