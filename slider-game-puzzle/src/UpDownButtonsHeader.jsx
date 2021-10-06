@@ -5,10 +5,9 @@ const UpDownButtonsHeader = (props) => {
         props.actionCallBack(e.target.name, props.column.instanceId);
     };
 
-    // { props.displayName }&nbsp;
     return (
-        <div style={{'width':'100%', 'textAlign':'center'}}>
-            <span className="up-down-buttons" style={{'fontSize':'2em'}}>            
+        <div className="header-buttons-outer">
+            <span className="header-buttons">            
                 <button name="up" onClick={onClick}>^</button> &nbsp;
                 <button name="down" onClick={onClick}>v</button>
             </span>

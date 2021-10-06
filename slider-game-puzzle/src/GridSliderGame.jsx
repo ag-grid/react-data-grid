@@ -40,7 +40,7 @@ function GridSliderGame() {
             editable: false,
             maxWidth: 150,
             headerComponentFramework: ControlButtons, headerComponentParams:{actionCheckCallback: checkPuzzleDone, actionShuffle: shuffleData},
-            cellStyle: {backgroundColor: 'white'}
+            cellClass: 'blank-tile'
         },
         {   
             field: 'pos1', 
@@ -62,11 +62,11 @@ function GridSliderGame() {
     // never changes, so we can use useMemo
     const defaultColDef = useMemo( ()=> ({
         resizable: true,
-        cellStyle: params => {
+        cellClass: params => {
         if (params.value === '') {
-            return {backgroundColor: 'white'};
+            return 'blank-tile';
         }
-        return {'padding': '20px', 'backgroundColor': 'AliceBlue', 'textAlign':'center', 'fontSize':'60px'};
+        return 'tile-cell';
     }    
     }), []);
 

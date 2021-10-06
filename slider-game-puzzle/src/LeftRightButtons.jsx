@@ -5,11 +5,11 @@ const LeftRightButtons = (props)=>{
     };
   
     return (
-        <div style={{'textAlign':'center'}}>
-        <span style={{'fontSize':'4em'}}>
-            <button name="left" onClick={onClick}>&lt;</button> &nbsp;
-            <button name="right" onClick={onClick}>&gt;</button>
-        </span>
+        <div className="cell-buttons-outer">
+          <span className="cell-buttons">
+              <button name="left" onClick={onClick}>&lt;</button> &nbsp;
+              <button name="right" onClick={onClick}>&gt;</button>
+          </span>
       </div>
     );
   }

@@ -9,8 +9,8 @@ const ControlButtons = (props) => {
     };
   
     return (
-        <div style={{'width':'100%', 'textAlign':'center'}}>
-            <span className="control-buttons" style={{'fontSize':'2em'}}>
+        <div className="header-buttons-outer">
+            <span className="header-buttons">
                 <button name="check" onClick={onCheck}>Done?</button> &nbsp;
                 <button name="shuffle" onClick={onShuffle}>@</button>
             </span>
