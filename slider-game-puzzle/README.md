@@ -1,6 +1,8 @@
 # Slider Tile Game Puzzle
 
-AG Grid's new React Rendering Engine is written 100% in React. To demonstrate the use of custom headers in the new React Rendering Engine we created a simple game to add buttons in the header, the game code also demonstrates other customization approaches using CSS and `customStyle` property.
+AG Grid's new React Rendering Engine is written 100% in React. To demonstrate the use of custom headers in the new React Rendering Engine we created a simple game to add buttons in the header, the game code also demonstrates other customization approaches using CSS and `className` property.
+
+[You can play the finished game on Github.io](https://ag-grid.github.io/react-data-grid/slider-game/index.html)
 
 ## What is a Slider Game Puzzle?
 
