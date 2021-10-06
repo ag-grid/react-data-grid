@@ -144,6 +144,229 @@ This cell renderer component is very similar to the header components because th
 
 ## Grid Wrapper `GridSliderGame`
 
+I will describe the code for the data grid and how it uses the components to style and interact with the game.
+### Create Wrapper Components for React Data Grid
+
+Rather than put all my code in the `App.js` I created a React Component for the Grid interface to the game.
+
+I embed it in `App.js`
+
+```javascript
+function App() {
+  return (
+    <div style={{width:"100%", height:"400px"}}>
+    <GridSliderGame></GridSliderGame>
+    </div>
+  );
+}
+```
+
+This gives me the flexibility to adjust the GUI as required, without impacting the main application.
+
+Because my 'game' is a separate object, my `GridSliderGame` is focussed on the rendering and interaction, so does not become cluttered with domain logic for the game.
+
+After importing all the necessary libraries and components:
+
+```javascript
+import { AgGridReact } from 'ag-grid-react';
+import React, { useMemo, useState } from 'react';
+
+import {SliderGame} from './SliderGame'
+import {UpDownButtonsHeader} from './UpDownButtonsHeader'
+import {ControlButtons} from './ControlButtons'
+import {LeftRightButtons} from './LeftRightButtons'
+```
+
+I create the `GridSliderGame` component:
+
+```javascript
+function GridSliderGame() {
+```
+
+### State for Game and Grid
+
+The Grid front end for the game uses two stateful variables:
+
+```javascript
+    const [game, setGame] = useState(new SliderGame());
+    const [rowData, setRowData] = useState(game.getDataAsRows());  
+```
+
+One is the `game` itself, and the other is the `rowData` which we will render to the Grid.
+
+The game controls are all provided by the Header and Cell Renderer components, so the first thing I do is create the functions which wire these together.
+
+### Callback Functions for Props
+
+`reorderGrid` is the function that will be called by the up, down, left and right buttons in the header and row cell renderer. This function will be passed into the custom component as a prop when we define the column definitions. The game action of moving pieces will be delegated to the game object and the game will then return the new state of the tiles which we will use to set the row data in the grid.
+
+```javascript
+    const reorderGrid = (actionName, actionOn)=>{
+        setRowData(game.movePieces(actionName, actionOn));
+    } 
+```
+
+Similarly, when the `@` button is pressed to shuffle the tiles around, the `shuffleData` function will be called. This will delegate to the `game` to re-order the pieces, and then return the status of the tiles so that we can render them in the grid.
+
+```javascript
+    const shuffleData = ()=>{
+        game.shuffleData();
+        setRowData(game.getDataAsRows());
+    }
+```
+
+When the `Done?` button is pressed, we will ask the `game` if the puzzle is done, and then render an appropriate message to the player. The `checkPuzzleDone` function will be passed to the `ControlButtons` component as a `prop`.
+
+```javascript
+    const checkPuzzleDone = ()=>{
+        if(game.isPuzzleDone()){
+            alert("Puzzle complete, well done!");
+        }else{
+            alert("Sorry, not done yet");
+        }
+    }
+```
+
+### Styling with `className` Function
+
+All of the styling customization of the grid is performed using CSS. The cells in the grid are styled differently depending whether they have a number or are blank. To achieve this effect I use the `className` property on the column definitions. `className` can take either a string literal or a function. Since I need the styling to be dynamic based on content I create a function that will be used:
+
+```javascript
+    const blankOrNumberTile = (params)=> {
+        return params.value === '' ? 'blank-tile' : 'tile-cell';
+    };
+```
+
+The `blankOrNumberTile` will be passed the cell parameters, and based on the value in the cell will either set the tile as a class of `blank-title` or `tile-cell`, where a `tile-cell` has content.
+
+All of the wiring for the grid takes place in the column definitions:
+
+```javascript
+    const columnDefs = [ 
+        ...
+    ];   
+```
+
+The [Cell Styling options are described in the documentation](https://www.ag-grid.com/react-data-grid/cell-styles/). The simple cell styling could be done, as I have, with the `className` or a `classStyle` could be used to set the inline style for the element. Also cell class rules are available which support a simplified DSL for creating Excel like formatted cells.
+
+Alternatively, we could use a Cell Renderer, as I did for the left and right buttons.
+
+### Wiring Functionality With Column Definitions
+
+The `columnDefs` is an array of Column Definition objects to define the field to map to in the `rowData` and additional styling and handling.
+
+We haven't seen the `rowData` yet, because this is returned from the `game` functions. Our `rowData` consists of an array of objects where each object has three fields `pos1`, `pos2`, `pos3` e.g. the object below would represent the `completed` state of the tile puzzle
+
+```javascript
+[
+    {`pos1`: '1', `pos2`:`2`, `pos3`:`3`},
+    {`pos1`: '4', `pos2`:`5`, `pos3`:`6`},
+    {`pos1`: '7', `pos2`:`8`, `pos3`:``},
+]
+```
+
+i.e. when the tile looks like:
+
+```
+123
+456
+78
+```
+
+The column definitions create for the Data Grid also include a column not reference here, because it is a `control` column with a custom cell renderer that doesn't depend on a data value in the row data.
+
+The first column definition is the `control` column, this is one of the objects in the `columnDefs` array:
+
+```javascript
+    const columnDefs = [    
+        {
+            headerName: 'controls',
+            cellRendererFramework: LeftRightButtons,
+            cellRendererParams: {actionCallBack: reorderGrid},
+            headerComponentFramework: ControlButtons,
+            headerComponentParams:
+                {
+                    actionCheckCallback: checkPuzzleDone,
+                    actionShuffle: shuffleData
+                },
+            cellClass: 'blank-tile'
+        },
+```
+
+This column definition has a `headerName` that will not be visible because we are using a custom Header Component. The `cellClass` has been hard coded in the definition to be of type `blank-tile`.
+
+To use a custom component as a Cell Renderer I have to set a cell renderer property. I'm using a cell renderer created in React so I wire up my `LeftRightButtons` component as a `cellRendererFramework` property. I pass `props` to this component using the `cellRendererParams`, these can be any object so I'm passing in the `reorderGrid` callback as the `actionCallBack` property.
+
+Similarly, I add a header component using the `headerComponentFramework` property. I add hte `ControlButtons` component, and pass in the `checkPuzzleDone` function and `shuffleData` functions as `props` to the component using the `headerComponentParams`.
+
+All the other columns are similar since they represent the same type of data. This is unusual for a Data Grid, but is a side-effect of it being used as a front end to a game engine.
+
+```javascript
+{   
+    field: 'pos1', 
+    headerComponentFramework: UpDownButtonsHeader, 
+    headerComponentParams:{actionCallBack: reorderGrid},
+    cellClass: blankOrNumberTile
+},
+```
+
+Here the column is mapped to a data value in the `rowData` through the use of the `field` property.
+
+The remainder of the properties are to wire up the functionality.
+
+The `headerComponentFramework` and `headerComponentParams` are used once again to wire up the custom header, this time the `UpDownButtonsHeader` component is used. In addition the `cellClass` is configured to decide the class name for the cell using the `blankOrNumberTile` function.
+
+
+The remaining column definitions are the same, the only difference is the `field` that they are wired to:
+
+```javascript
+{   
+    field: 'pos2', 
+    headerComponentFramework: UpDownButtonsHeader,
+    headerComponentParams:{actionCallBack: reorderGrid},
+    cellClass: blankOrNumberTile
+},
+{   
+    field: 'pos3', 
+    headerComponentFramework: UpDownButtonsHeader, 
+    headerComponentParams:{actionCallBack: reorderGrid},
+    cellClass: blankOrNumberTile
+}
+```        
+
+### Configuring the Grid Properties
+
+The final step is to configure the grid itself.
+
+We are using the `AgGridReact` component which is the React Rendering Engine for AG Grid.
+
+```javascript
+return (
+    <AgGridReact 
+        reactUi="true"
+        className="ag-theme-alpine"
+        columnDefs={columnDefs}
+        rowData={rowData}
+        rowHeight={80}
+    />
+);
+```
+
+This has been configured to use the new React rendering engine with `reactUi="true"`, the default grid styling is from AG Grid's theme `ag-theme-alpine`, then the column definitions and row data are added, along with the `rowHeight` in pixels.
+
+When the `rowData` state is updated, the grid will refresh to render the new state of the game tiles.
+
+### Game Engine
+
+The game code can be found in the `SliderGame.js` code.
+
+- [SliderGame.js on Github](https://github.com/ag-grid/react-data-grid/blob/main/slider-game-puzzle/src/SliderGame.js)
+
+I don't plan to discuss the game engine in this text because it is fairly standard JavaScript.
+
+I chose to isolate all the game functionality into a separate object to make the Data Grid wrapper cleaner and focussed on the interaction and rendering, but not on the domain logic for the application.
+
+
 ## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
