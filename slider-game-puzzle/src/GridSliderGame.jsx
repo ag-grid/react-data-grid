@@ -1,6 +1,6 @@
 import './game.css';
 import { AgGridReact } from 'ag-grid-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {SliderGame} from './SliderGame'
 import {UpDownButtonsHeader} from './UpDownButtonsHeader'
@@ -9,12 +9,19 @@ import {LeftRightButtons} from './LeftRightButtons'
 
 function GridSliderGame() {
 
-    const [game, setGame] = useState(new SliderGame());
-    const [rowData, setRowData] = useState(game.getDataAsRows());        
+    const [game, setGame] = useState();
+    const [rowData, setRowData] = useState([]);        
 
   
+    useEffect(()=>{
+        const aGame = new SliderGame();
+        setGame(aGame);
+        setRowData(aGame.getDataAsRows())
+    }
+    ,[]);
+
     const reorderGrid = (actionName, actionOn)=>{
-        setRowData(game.movePieces(actionName, actionOn));
+        setRowData(game?.movePieces(actionName, actionOn));
     } 
   
     const shuffleData = ()=>{

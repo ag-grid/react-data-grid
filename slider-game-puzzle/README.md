@@ -193,8 +193,16 @@ function GridSliderGame() {
 The Grid front end for the game uses two stateful variables:
 
 ```javascript
-    const [game, setGame] = useState(new SliderGame());
-    const [rowData, setRowData] = useState(game.getDataAsRows());  
+    const [game, setGame] = useState();
+    const [rowData, setRowData] = useState([]);        
+
+  
+    useEffect(()=>{
+        const aGame = new SliderGame();
+        setGame(aGame);
+        setRowData(aGame.getDataAsRows())
+    }
+    ,[]); 
 ```
 
 One is the `game` itself, and the other is the `rowData` which we will render to the Grid.
