@@ -67,11 +67,16 @@ function GridSliderGame() {
         }
     ];
 
+    const defaultColDef = {
+        maxWidth:150,
+        width:120
+    }
     return (
         <AgGridReact 
             reactUi="true"
             className="ag-theme-alpine"
             columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
             rowData={rowData}
             rowHeight={80}
         />

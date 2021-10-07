@@ -348,20 +348,28 @@ The final step is to configure the grid itself.
 We are using the `AgGridReact` component which is the React Rendering Engine for AG Grid.
 
 ```javascript
-return (
-    <AgGridReact 
-        reactUi="true"
-        className="ag-theme-alpine"
-        columnDefs={columnDefs}
-        rowData={rowData}
-        rowHeight={80}
-    />
-);
+    const defaultColDef = {
+        maxWidth:150,
+        width:120
+    }
+
+    return (
+        <AgGridReact 
+            reactUi="true"
+            className="ag-theme-alpine"
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            rowData={rowData}
+            rowHeight={80}
+        />
+    );
 ```
 
 This has been configured to use the new React rendering engine with `reactUi="true"`, the default grid styling is from AG Grid's theme `ag-theme-alpine`, then the column definitions and row data are added, along with the `rowHeight` in pixels.
 
 When the `rowData` state is updated, the grid will refresh to render the new state of the game tiles.
+
+I added some column sizing via the defaultColDef to control the size of the columns and make it more like a square puzzle.
 
 ### Game Engine
 
