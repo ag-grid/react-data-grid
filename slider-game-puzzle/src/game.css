@@ -18,7 +18,6 @@
 .blank-tile{
     background-color: white;
     color: black;
-    /* box-shadow: inset 0px 0px 22px -8px #000000 !important; */
 }
 
 .tile-cell{

@@ -2,7 +2,7 @@
 const UpDownButtonsHeader = (props) => {
 
     const onClick = (e)=> {
-        props.actionCallBack(e.target.name, props.column.instanceId);
+        props.actionCallBack(e.target.name, props.column.instanceId-1);
     };
 
     return (

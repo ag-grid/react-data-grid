@@ -1,3 +1,4 @@
+import './game.css';
 import { AgGridReact } from 'ag-grid-react';
 import React, { useState } from 'react';
 

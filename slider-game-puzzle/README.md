@@ -1,6 +1,6 @@
 # Slider Tile Game Puzzle
 
-AG Grid's new React Rendering Engine is written 100% in React. To demonstrate the use of custom headers in the new React Rendering Engine we created a simple game to add buttons in the header, the game code also demonstrates other customization approaches using CSS and `className` property.
+AG Grid's new React Rendering Engine is written 100% in React. To demonstrate the use of custom headers in the new React Rendering Engine we created a simple game to add buttons in the header using a custom header renderer, the game code also demonstrates other customization approaches using CSS, `className` property and custom cell renderer.
 
 [You can play the finished game on Github.io](https://ag-grid.github.io/react-data-grid/slider-game/index.html)
 
@@ -65,7 +65,7 @@ The Up and Down button component header in [UpDownButtonsHeader.jsx](https://git
 const UpDownButtonsHeader = (props) => {
 
     const onClick = (e)=> {
-        props.actionCallBack(e.target.name, props.column.instanceId);
+        props.actionCallBack(e.target.name, props.column.instanceId-1);
     };
 
     return (
@@ -84,7 +84,9 @@ export {UpDownButtonsHeader}
 
 The component simply renders the controls and binds an `onClick` handler. The `onClick` handler delegates the functionality off to a callback, supplied in `props` from the parent component to return the button name and the column number.
 
-The parent Grid can then move the tiles.
+The column `instanceId` start at 1, internally the sliding puzzle is 0 indexed, so I pass in the column's `instanceId-1`.
+
+The parent Grid can then control how the tiles are moved, the buttons are there for the user to interact with.
 
 The header for the control buttons is similarly very small, contained in [ControlButtons.jsx](https://github.com/ag-grid/react-data-grid/blob/main/slider-game-puzzle/src/ControlButtons.jsx)
 
@@ -167,9 +169,10 @@ This gives me the flexibility to adjust the GUI as required, without impacting t
 
 Because my 'game' is a separate object, my `GridSliderGame` is focussed on the rendering and interaction, so does not become cluttered with domain logic for the game.
 
-After importing all the necessary libraries and components:
+After importing all the necessary libraries and components, including the css file to style the game components:
 
 ```javascript
+import './game.css';
 import { AgGridReact } from 'ag-grid-react';
 import React, { useMemo, useState } from 'react';
 
@@ -179,7 +182,7 @@ import {ControlButtons} from './ControlButtons'
 import {LeftRightButtons} from './LeftRightButtons'
 ```
 
-I create the `GridSliderGame` component:
+I create the `GridSliderGame` component itself:
 
 ```javascript
 function GridSliderGame() {
@@ -197,6 +200,8 @@ The Grid front end for the game uses two stateful variables:
 One is the `game` itself, and the other is the `rowData` which we will render to the Grid.
 
 The game controls are all provided by the Header and Cell Renderer components, so the first thing I do is create the functions which wire these together.
+
+The `SliderGame` is the business logic, or domain logic for the game. The `GridSliderGame` is the presentation layer that the user sees and interacts with.
 
 ### Callback Functions for Props
 
@@ -366,7 +371,67 @@ The game code can be found in the `SliderGame.js` code.
 
 I don't plan to discuss the game engine in this text because it is fairly standard JavaScript.
 
-I chose to isolate all the game functionality into a separate object to make the Data Grid wrapper cleaner and focussed on the interaction and rendering, but not on the domain logic for the application.
+I chose to isolate all the game functionality into a separate object to make the Data Grid wrapper cleaner and focussed on the interaction and rendering, and not have to cram in the code for the game domain logic. This will also help make it easier to add automated tests to the project.
+
+### CSS
+
+Most of the styling is supplied by the [AG Grid Theme Engine](https://www.ag-grid.com/react-data-grid/themes/) but I did add some CSS to style the classes that I added from the cell and header components, and the class name styling on the column.
+
+Because I'm using a theme from AG Grid, the CSS is pretty small:
+
+
+```
+.header-buttons-outer{
+    width: 100%;
+    text-align: center;
+  }
+  
+.header-buttons{
+    font-size: 2em;
+}
+
+.cell-buttons-outer{
+    text-align: center;
+}
+
+.cell-buttons{
+    font-size: 4em;
+}
+  
+.blank-tile{
+    background-color: white;
+    color: black;
+}
+
+.tile-cell{
+    padding: 15px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-size: 60px;
+    border: 5px outset rgb(114, 114, 114) !important;
+}
+```
+
+
+## Summary
+
+That was just a fun little project to demonstrate some of the customization possible with AG Grid:
+
+- [Cell Renderers](https://www.ag-grid.com/react-data-grid/component-cell-renderer/)
+- [Header Components](https://www.ag-grid.com/react-data-grid/component-header/)
+- [Cell Styling](https://www.ag-grid.com/react-data-grid/cell-styles/)
+- [Themes](https://www.ag-grid.com/react-data-grid/themes/) and CSS Styling
+
+The [full code is available on Github](https://github.com/ag-grid/react-data-grid/tree/main/slider-game-puzzle), and you can [play the slider puzzle game online](https://ag-grid.github.io/react-data-grid/slider-game/index.html).
+
+Feel free to play around with the code to learn a little more about AG Grid. Some things you might try are:
+
+- changing the styling
+- trying a different theme
+- add a counter to the game for number of moves required to solve the game
+
+Or, just play the game and see how well you do.
 
 
 ## Getting Started with Create React App
