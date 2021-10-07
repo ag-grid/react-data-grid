@@ -57,6 +57,10 @@ export function PodcastGrid(props) {
           filter: 'agDateColumnFilter'
         },
         {
+          field: 'description',
+          hide: true
+        },
+        {
           headerName: 'Episode',
           field: 'mp3',
           flex: 1,
