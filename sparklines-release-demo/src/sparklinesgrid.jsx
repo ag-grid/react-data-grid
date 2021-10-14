@@ -43,6 +43,7 @@ const SparklinesGrid = () => {
     const [rowData, setRowData] = useState([]);
     const interval = useRef(100);
     const gridRef = useRef(null);
+    const [gridApi, setGridApi] = useState();
     
     const [feedInterval, setFeedInterval] = useState();
     const [sparkType, setSparkType] = useState("lines");
@@ -138,16 +139,29 @@ const SparklinesGrid = () => {
 
     const setSparklinesOptions = (options)=>{
 
-        const columnDefs = gridRef.current.api.getColumnDefs();
+        var columnDefs;
+        //const api = gridRef.current.api;
+        const api = gridApi;
+
+        if(!api){
+            return;
+        }
+
+        columnDefs = api.getColumnDefs();
+
+        if(!columnDefs){
+            return;
+        }
+
         columnDefs.forEach(function (colDef) {
             if(colDef.field==="change"){
                 colDef.cellRendererParams={sparklineOptions: options};            
             }
         });
-        gridRef.current.api.setColumnDefs(columnDefs);
+        api.setColumnDefs(columnDefs);
 
         // rerender the sparklines
-        gridRef.current.api.redrawRows();        
+        api.redrawRows();        
     };
 
 
@@ -214,6 +228,10 @@ const SparklinesGrid = () => {
 
     },[sparkType, dataType])  
 
+    const onGridReady = (params)=>{
+        setGridApi(params.api);
+    }
+
     return (
         <div style={{width: "100%"}}>
             <div>
@@ -238,8 +256,10 @@ const SparklinesGrid = () => {
                 <div className="ag-theme-alpine" style={{flex:1, height:500}}>
                     <AgGridReact
                         ref={gridRef}
+                        onGridReady = {onGridReady}
                         gridOptions={gridOptions}
                         rowData={rowData}
+                        reactUi={true}
                     >
                     </AgGridReact>
                 </div>
