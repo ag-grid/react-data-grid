@@ -98,6 +98,18 @@ const SparklinesGrid = () => {
         },
     };
 
+    // https://www.ag-grid.com/react-data-grid/sparklines-bar-customisation/
+
+    const barSparklineOptions = {
+        type: 'bar',
+        fill: '#5470c6',
+        stroke: '#91cc75',
+        highlightStyle: {
+          fill: '#fac858',
+        },
+        valueAxisDomain: [0, 1],
+    }
+
     // https://www.ag-grid.com/react-data-grid/sparklines-column-customisation/
     const columnSparklineOptions = {
         type: 'column',
@@ -178,14 +190,15 @@ const SparklinesGrid = () => {
 
                 const diff = Math.random();
                 // add new value to the data
-                if(typeof shifted === "array"){
+                if(Array.isArray(shifted)){
                     data.push([new Date(), diff])  
-                }
-                if(typeof shifted === "object"){
-                    data.push({xVal: new Date(), yVal: diff})  
-                }
-                if(typeof shifted === "number"){
-                    data.push(diff)  
+                }else{
+                    if(typeof shifted === "object"){
+                        data.push({xVal: new Date(), yVal: diff})  
+                    }
+                    if(typeof shifted === "number"){
+                        data.push(diff)  
+                    }
                 }
                 
                 const newVolume = row.data.volume + (Math.floor(diff*1000))
@@ -208,7 +221,8 @@ const SparklinesGrid = () => {
         const options = {
                 "lines" : lineSparklineOptions,
                 "columns" : columnSparklineOptions,
-                "area" : areaSparklineOptions
+                "area" : areaSparklineOptions,
+                "bar" : barSparklineOptions
                 }
 
         const baseOptions = getSparklinesOptions(options[sparkType], dataType);
@@ -222,9 +236,15 @@ const SparklinesGrid = () => {
 
         setDummyOptions(myDummyOptions)
 
-        stopFeed();
+        const isRunning = feedInterval!==undefined;
+
+        if(isRunning)
+            stopFeed();
 
         setSparklinesOptions(myDummyOptions.cellRendererParams.sparklineOptions);
+
+        if(isRunning)
+          startFeed();
 
     },[sparkType, dataType])  
 
@@ -244,6 +264,7 @@ const SparklinesGrid = () => {
                 <button onClick={()=>setSparkType("lines")} disabled={sparkType==="lines"}>Lines</button>
                 <button onClick={()=>setSparkType("columns")} disabled={sparkType==="columns"}>Columns</button>
                 <button onClick={()=>setSparkType("area")} disabled={sparkType==="area"}>Area</button>
+                <button onClick={()=>setSparkType("bar")} disabled={sparkType==="bar"}>Bar</button>
             </div>
 
             <div>
