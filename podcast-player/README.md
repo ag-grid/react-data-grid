@@ -1786,7 +1786,7 @@ The Testing Library example here works purely at a DOM level and uses abstractio
 
 If you are interested in Testing Library then you should certainly check out the [Testing Library Web Site](https://testing-library.com/docs/react-testing-library/intro), and might find the [React Testing Recipes](https://reactjs.org/docs/testing-recipes.html) useful.
 
-All the code to support this blog post is available on [Github](https://github.com/ag-grid/react-data-grid) in the [React Data Grid Podcast Project](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player), in particular the [version 8]() folder is the version where Testing Library was used.test
+All the code to support this blog post is available on [Github](https://github.com/ag-grid/react-data-grid) in the [React Data Grid Podcast Project](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player), in particular the [version 8](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v8) folder is the version where Testing Library was used.test
 
 
 ## Available Scripts
