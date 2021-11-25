@@ -1359,6 +1359,17 @@ To learn more about [AG Grid and the React UI](https://www.ag-grid.com/react-dat
 
 ## Version 8 - Adding some test code
 
+In the next few sections I will describe the testing code added to the project.
+## What is the Testing Library?
+
+The [Testing Library](https://testing-library.com/) is a JavaScript testing library which works with multiple frameworks. It is not designed as a Unit Testing library because it is designed to target user visible interactions and changes, rather that internal object changes.
+
+In the AG Grid Documentation there is [an example of using Enzyme for Unit level testing](https://www.ag-grid.com/react-data-grid/testing/). This uses low level API Access on the grid to allow access to the internals for the AG Grid.
+
+In the examples here I use the Testing Library and do not access the AG Grid API, all the testing is performed through DOM interaction and DOM events. This makes the automating more like end to end tests but the difference is that we don't instantiate the full application, instead we instantiate the component or subset of components that we want to test and build 'just enough' DOM to make the components fit together.
+
+## How to Run Testing Library Tests with NPM
+
 The [Testing Library](https://testing-library.com/) is added to our project when we use `create-react-app`.
 
 We can run all the tests for our project with:
@@ -1396,21 +1407,21 @@ test('renders the app', () => {
 
 This change doesn't really help me with my development, since it just looks on the page for the existence of some text, but since the text matches my `h1` I have a working test, which I can then use to learn more about the Testing Library.
 
-## The Testing Library
+## How to use The Testing Library
 
 The Testing Library is a set of packages to support testing UI components, without requiring a full browser or integrated environment.
 
 It consists of:
 
 - a core [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro) used for querying and interacting with the DOM.
-- frameworks libraries, which extend the core to handle the nuances of each framework.
+- framework libraries, which extend the core to handle the nuances of each framework.
 - support libraries e.g. `user-event` which makes it easier to simulate user interaction with the DOM.
 
 I'm using the [React](https://testing-library.com/docs/react-testing-library/intro) library, but [Angular](https://testing-library.com/docs/angular-testing-library/intro) and [Vue](https://testing-library.com/docs/vue-testing-library/intro) are covered amongst others.
 
 The Testing Library does not contain a test runner, but when `create-react-app` is used, [Jest](https://jestjs.io/) is configured as the default test runner.
 
-The default test created by `create-react-app`:
+The default test created by `create-react-app` looks as follows:
 
 ```javascript
 test('renders learn react link', () => {
@@ -1419,6 +1430,8 @@ test('renders learn react link', () => {
   expect(linkElement).toBeInTheDocument();
 });
 ```
+
+To pull this apart to explain the main concepts.
 
 - `test` comes from Jest and allows us to write 'tests' and report on pass/failures
 - `render` comes from the react wrapper of Testing Library and renders a React component in a virtual DOM, waiting for the initial events to complete.
@@ -1433,6 +1446,255 @@ To test the user interactions I also [installed the `user-event` and `dom` libra
 ```
 npm install --save-dev @testing-library/user-event @testing-library/dom
 ```
+
+Tests are stored in files with `test` in the name, this allows them to be found by Jest when `npm test` is run.
+
+In the example source I created:
+
+- `App.test.js` this contains tests that explore the interaction between form fields and the grid.
+- `PodcastGrid.text.js` this contains tests that look at the Grid component in isolation.
+
+
+## Testing the Grid Component Scope Decisions
+
+Rather than use `AgGridReact` directly in my application I wrap it in a component to make it easier to configure with properties and handle the support methods unique to it rendering podcasts.
+
+This also allows me to test `PodcastGrid` rather than `AgGridReact`.
+
+One of the decisions we have to make when testing using 3rd party components like AG Grid is the scope of what we will test.
+
+I don't want to write tests to check that AG Grid works. I want to write tests that AG Grid renders the data I have fed in, and that any cell renderers I have created display the underlying data as I expect. This fits in with the general philosophy of the Testing Library.
+
+## Testing Library Locator Strategies
+
+Because AG Grid is a complex component I have to differ from the recommended approaches put forward by the Testing Library authors regarding locating elements.
+
+Locating elements is a key part of automating any web application or component. We have to 'find' an element before we can interact with it to 'click', get attributes, check the text, etc.
+
+To 'find' an element we have to query the DOM, and the Testing Library provides an [extensive set of queries](https://testing-library.com/docs/queries/about) e.g.
+
+- `getByLabelText`
+- `getByRole`
+- `getByPlaceholderText`
+- `getByText`
+- etc.
+
+The [recommendations from the Testing Library authors](https://testing-library.com/docs/dom-testing-library/faq) include:
+
+- [query by 'visible' elements on screen](https://testing-library.com/docs/dom-testing-library/cheatsheet#queries) like text
+- prefer to use a `data-testid` attribute to identify elements on the screen
+
+I have a background in GUI and Web Automation using libraries like WebDriver. I avoid locating elements by text because I often have to perform complex synchronisation and I want to have a high degree of control over the elements selected, so I prefer to use CSS Selectors to find elements in the DOM.
+
+The Testing Library suggestions make a lot of sense when dealing with components, and in particular help avoid the Testing Library tests overlap too far into the internal Unit testing. Component testing with Testing Library will usually require less synchronisation because the component will be instantiated in a specific state, and then the visual elements and user focussed parts can be tested.
+
+The main component I am testing is a data grid. A data grid will often render the same values in multiple cells in the grid, which can make querying by visible text difficult.
+
+When dealing with 3rd party libraries that we are extending we don't have the option of adding `data-testid` attributes into 3rd party components. As a personal preference I try to avoid adding automation specific attributes into my code, so I would tend to avoid `data-testid` for that reason alone, but with a locator strategy built around CSS Selectors it doesn't really matter.
+
+As a result of all of the above, rather than use the [recommended query methods](https://testing-library.com/docs/queries/about#priority) most of my element locators are built around `querySelector` or `querySelectorAll`.
+
+## Mitigating Risk of DOM Changes
+
+On reason people avoid `querySelector` as a location strategy is that it is vulnerable to DOM changes or, if we are basing the selectors on CSS Styling, that the CSS Styling can change independently of the functionality and we may find functional based tests failing due to styling changes.
+
+One mitigation approach for this is to use query selectors like `getByRole`.
+
+The approach I have used it to add an abstraction layer so that our test code does not use the CSS Selectors directly, instead these are contained in an abstraction. The tests may fail if styling names change, but I only have to 'fix' this in one place in the code.
+
+This can be as simple as:
+
+```javascript
+const AudioLocator = {
+  source: "audio source"
+}
+```
+
+Where I could assert on element attribute value with:
+
+```javascript
+expect( 
+  element.querySelector(AudioLocator.source).
+    getAttribute("src")).
+        toEqual("https://eviltester.com")
+```
+
+One advantage of using CSS Selectors with AG Grid is that it has a 'theme' concept, which means that many of the CSS Selectors remain stable in order to avoid breaking existing styling themes for the grid. We are at risk of AG Grid changing between versions for any locators we choose which do not use elements that are styled by a theme.
+
+## Abstraction Layers
+
+Abstraction layers are also useful with complex 3rd party components because they can be shared between projects. For example [Kerry McKeever](https://kerrymckeever.com/) has an [AG Grid abstraction for Cypress](https://kerrymckeever.com/how-to-test-ag-grid-with-cypress/) which can be found on [GitHub](https://github.com/kpmck/cypress-ag-grid).
+
+In the podcast project, the abstraction code is in the `AgGridTestUtils.js` code.
+
+This has custom selector functions to query the DOM and locate elements, e.g.
+
+```javascript
+const columnNamed = (cellName)=>{
+  return `.ag-cell[col-id="${cellName}"]`
+}
+```
+
+It also has the code used to synchronise the grid.
+
+AG Grid performs most of its operations asynchronously so we have to synchronise our test execution with the grid, otherwise we may try and access an element before it is ready to be interacted with.
+
+Most of these are functions which use the Testing Library generic [`waitFor` function](https://testing-library.com/docs/dom-testing-library/api-async/#waitfor)
+
+```javascript
+const waitForGridToBeInTheDOM=()=>{
+    return waitFor(() => {
+      expect(document.querySelector(".ag-root-wrapper")).toBeInTheDocument();
+    });
+}
+```
+
+Testing Library also has a built in synchronisation method to wait for an element to be removed: `waitForElementToBeRemoved`.
+
+
+## Mocking Fetch Requests
+
+Because of the way I wrote my `PodcastGrid` component, I have to mock out `fetch` requests when testing the component.
+
+Writing test code is a good way to identify architecture decisions in your code which may not be optimal. If a component is hard to automate in a `test` function, then it may be time to rewrite it.
+
+But... ideally write a `test` function to cover the functionality first, then when you amend the code, you have a something that checks if you made any errors during the refactoring.
+
+
+
+## A Test Explored
+
+I'll break down one of the tests for the `PodcastGrid` to make it easier to understand how to automate AG Grid.
+
+```javascript
+it("renders user data from a url", async () => {
+```
+
+The tests are written to describe the condition being tested as an assertion i.e. the PodcastGrid can render user data from a url.
+
+Then I need to mock out the `fetch` request made by the `PodcastGrid` in a `useEffect` to load the RSS feed.
+
+First I create the data for the RSS feed in the `fakeRSSFeed` constant.
+
+```javascript
+    const fakeRSSFeed = 
+    `<channel>
+        <item>
+            <title>Fake Episode</title>
+            <pubDate>Thu, 23 Sep 2021 10:00:00 +0000</pubDate>
+            <enclosure url="https://eviltester.com"/>
+            <description>
+            <![CDATA[ <p>Fake Description</p> ]]>
+            </description>
+        </item>
+    </channel>`;
+```
+
+Because we are testing at a component level it is very easy to control the data we need for the testing without having to setup any web servers to deploy files.
+
+
+A standard function of `jest` is used to spy on any `fetch` calls, and instead of issuing an HTTP request, simply return an object that represents the results of having made a `fetch`.
+
+```javascript
+    jest.spyOn(window, "fetch").mockImplementation(() =>{
+      return Promise.resolve({
+        text: () => fakeRSSFeed
+      })}
+    );
+```
+
+Then I render the component being tested in the DOM.
+
+```javascript 
+    render(<PodcastGrid 
+      rssfeed="https://fakefeed"
+      height="500px"
+      width="100%"     
+      quickFilter=""/>);
+```
+
+And with all the setup out of the way, I can then start to automate AG Grid.
+
+The first thing I have to do is wait for the grid to be fully rendered and populated in the DOM.
+
+```
+    await AgGridTest.waitForGridToBeInTheDOM();
+    await AgGridTest.waitForDataToHaveLoaded();
+```
+
+Both of the above synchronisation methods are contained in the `AgGridTestUtils.js` code.
+
+- `waitForGridToBeInTheDOM` waits for the basic grid to be present in the DOM.
+- `waitForDataToHaveLoaded` waits until any 'loading' indicator is no longer present.
+
+At this point AG Grid will then be asynchronously populating the grid with data, so if I start to interact with the Grid now, I'll likely get flaky tests that will work sometimes but at other times fail.
+
+So I add an additional level of synchronisation to check that the pagination is rendered as I expect.
+
+```javascript
+    await AgGridTest.waitForPagination().
+    then((pagination)=>{
+      expect(pagination.firstRow).toEqual("1");
+      expect(pagination.lastRow).toEqual("1");
+      expect(pagination.rowCount).toEqual("1");  
+    });
+```
+
+
+At this point I will check that the cell that represents the `mp3` for the podcast episode has been rendered as an HTML audio control and has the URL from the RSS feed.
+
+This code is also wrapped in a synchronisation waitFor function because the audio control can be rendered asynchronously.
+
+```javascript
+    
+    // the audio component may take a little extra time to render so waitFor it
+    await waitFor(() => {
+       expect( AgGridTest.getFirstRowWithNamedCellValue("title", "Fake Episode").
+                querySelector(AgGridTest.columnNamed('mp3')).
+                  querySelector(AudioLocator.source).
+                      getAttribute("src")).
+                        toEqual("https://eviltester.com")
+      }
+    )
+```
+
+
+```javascript
+    // remove the mock to ensure tests are completely isolated
+    global.fetch.mockRestore();
+  });
+```
+
+The important things to note about the test code are:
+
+- the abstraction code makes it easy to read and see what is happening
+- the code is heavy on synchronisation to avoid flaky execution
+- failed synchronisation is treated as a test failure
+- assertions are based on the external DOM representation, not the internals from the AG Grid API
+- it is possible to use Testing Library to handle 3rd party components
+- `querySelector` is a very flexible way to work with 3rd party components
+
+Also, these tests are first draft. The more tests that I add to the project, the more abstraction layers I would build up so the code asserting on the audio component mp3 url would move into a 'waitForAudioComponent' abstraction function to make it re-usable and simplify the test.
+
+The components would be automated and checked individually in isolation first, prior to checking the interaction as an application.
+
+## Testing The Component Integration
+
+The components are integrated through the use of the `App` component, which renders:
+
+- a drop down to select an RSS feed
+- a text field showing a URL
+- a `PodcastGrid` component which renders AG Grid
+
+Most of the functionality for `PodcastGrid` would be tested in isolation. But I still wanted to make sure that when I click a feed from the dropdown that the grid is populated with that RSS feed.
+
+This is not a full integration test because the `App` component will be tested in the DOM in isolation, but this approach demonstrates that it is possible to gradually build up 'integration' test coverage without needed to do all the testing on a deployed application.
+
+At this point I extend my use of Testing Library to cover more user events.
+
+
+
+
 
 
 References:
