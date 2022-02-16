@@ -1,4 +1,5 @@
 import {waitFor} from '@testing-library/react'
+import { prettyDOM } from '@testing-library/dom'
 
 // TODO: create parent div reference to handle multiple grids on a page
 // Synchronisation
@@ -52,7 +53,7 @@ const getRowCellNamed = (rowId, cellName)=>{
   
   // given a cell, get the value of the cell
 const getCellValue = (cell)=>{
-    return cell.querySelector(".ag-cell-value");
+    return cell.querySelector(".ag-cell-wrapper");   // was .ag-cell-value
 }
   
 const findFirstContainerElementWithClass = (anElement, findClassName)=>{
