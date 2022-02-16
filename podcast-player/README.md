@@ -49,11 +49,19 @@ This creates a bunch of extra files that I won't be using, but I tend not to del
 
 I'm going to use the community edition of AG Grid and the AG Grid React UI and add those to my projet using `npm install`
 
+
 ```shell
-npm install --save ag-grid-community ag-grid-react
+npm install --save ag-grid-community@26.0.0 ag-grid-react@26.0.0
 ```
 
 These are the basic setup instructions that you can find on the [AG Grid React Getting Started Page](https://ag-grid.com/react-data-grid/getting-started/).
+
+
+_Note: the code listed in this post was for version 26 of AG Grid. I added a section below describing the changes I made in version 9 of the podcast app for using version 27 of AG Grid, so if you do install the most recent version of AG Grid then you might want to look at that section to see the changes I made for the audio player cell renderer._
+
+```shell
+npm install --save ag-grid-community ag-grid-react
+```
 
 ## Version 1 - Create a Grid to Render Podcasts
 
@@ -1787,6 +1795,29 @@ The Testing Library example here works purely at a DOM level and uses abstractio
 If you are interested in Testing Library then you should certainly check out the [Testing Library Web Site](https://testing-library.com/docs/react-testing-library/intro), and might find the [React Testing Recipes](https://reactjs.org/docs/testing-recipes.html) useful.
 
 All the code to support this blog post is available on [Github](https://github.com/ag-grid/react-data-grid) in the [React Data Grid Podcast Project](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player), in particular the [version 8](https://github.com/ag-grid/react-data-grid/tree/main/podcast-player/v8) folder is the version where Testing Library was used.test
+
+---
+
+## Version 9 - Update to Version 27 of AG Grid
+
+When [version 27 of AG Grid was released](https://blog.ag-grid.com/whats-new-in-ag-grid-27/) I updated the project to take advanatage of the 100% React Rendering Engine as the default engine, and amended the cell renderer to use `jsx` rather than `HTML` because in version 27 creating framework based cell renderers was made simpler.
+
+In version 27 of AG Grid, the `cellRenderer` was changed to handle framework components.
+
+So in `PodcastGrid.js` I amended the audio renderer to use jsx
+
+```
+cellRenderer: (params => <audio controls preload="none" 
+                          style={{height:"2em", verticalAlign: "middle"}}>
+                          <source src={params.value} type="audio/mpeg" />
+                      </audio>),
+```
+
+There is no need with AG Grid version 27 to configure the React UI 'on' the new 100% React UI is enabled by default so I removed the `reactUI="true"` from the Grid definition.
+
+
+---
+
 
 
 ## Available Scripts
