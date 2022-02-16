@@ -44,9 +44,9 @@ function GridSliderGame() {
     const columnDefs = [    
         {
             headerName: 'controls',
-            cellRendererFramework: LeftRightButtons,
+            cellRenderer: LeftRightButtons,
             cellRendererParams: {actionCallBack: reorderGrid},
-            headerComponentFramework: ControlButtons,
+            headerComponent: ControlButtons,
             headerComponentParams:
                 {
                     actionCheckCallback: checkPuzzleDone,
@@ -56,19 +56,19 @@ function GridSliderGame() {
         },
         {   
             field: 'pos1', 
-            headerComponentFramework: UpDownButtonsHeader, 
+            headerComponent: UpDownButtonsHeader, 
             headerComponentParams:{actionCallBack: reorderGrid},
             cellClass: blankOrNumberTile
         },
         {   
             field: 'pos2', 
-            headerComponentFramework: UpDownButtonsHeader,
+            headerComponent: UpDownButtonsHeader,
             headerComponentParams:{actionCallBack: reorderGrid},
             cellClass: blankOrNumberTile
         },
         {   
             field: 'pos3', 
-            headerComponentFramework: UpDownButtonsHeader, 
+            headerComponent: UpDownButtonsHeader, 
             headerComponentParams:{actionCallBack: reorderGrid},
             cellClass: blankOrNumberTile
         }
@@ -80,7 +80,6 @@ function GridSliderGame() {
     }
     return (
         <AgGridReact 
-            reactUi="true"
             className="ag-theme-alpine"
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}

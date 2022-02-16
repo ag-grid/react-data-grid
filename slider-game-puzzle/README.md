@@ -8,10 +8,10 @@ AG Grid's new React Rendering Engine is written 100% in React. To demonstrate th
 
 This is a small implementation of a slider puzzle where the puzzle:
 
-- has a 3x3 grid of tiles
-- tiles 9 is missing to create a space
-- tiles can be moved into the space
-- when the tiles are in order the puzzle is complete
+- has a 3x3 grid of tiles,
+- tile 9 is missing to create a space,
+- tiles can be moved into the space,
+- when the tiles are in order the puzzle is complete.
 
 ```
 123
@@ -41,14 +41,13 @@ This example uses the new React Rendering Engine and demonstrates the use of the
 
 The game engine itself is not written in React. It is a simple [JavaScript object](https://github.com/ag-grid/react-data-grid/blob/main/slider-game-puzzle/src/SliderGame.js).
 
-The AG Grid game front end uses the `AgGridReact` front end, set to `reactUi="true"` to enable the [new React rendering engine](https://ag-grid.com/react-data-grid/reactui/), this improves the performance and experience of using AG Grid with the React Developer Tools.
 
 ## Customization of AG Grid
 
 AG Grid supports customization in many different ways. For this game we use:
 
-- Custom React Components
-- The Custom React Components styled by CSS
+- Custom React Components for Cell Renderer and Header Component.
+- The Custom React Components styled by CSS.
 - Grid Options have a `cellClass` which uses a function to provide different class names for the cells based on their contents.
 
 ## Custom Header Components
@@ -296,9 +295,9 @@ The first column definition is the `control` column, this is one of the objects 
     const columnDefs = [    
         {
             headerName: 'controls',
-            cellRendererFramework: LeftRightButtons,
+            cellRenderer: LeftRightButtons,
             cellRendererParams: {actionCallBack: reorderGrid},
-            headerComponentFramework: ControlButtons,
+            headerComponent: ControlButtons,
             headerComponentParams:
                 {
                     actionCheckCallback: checkPuzzleDone,
@@ -310,16 +309,16 @@ The first column definition is the `control` column, this is one of the objects 
 
 This column definition has a `headerName` that will not be visible because we are using a custom Header Component. The `cellClass` has been hard coded in the definition to be of type `blank-tile`.
 
-To use a custom component as a Cell Renderer I have to set a cell renderer property. I'm using a cell renderer created in React so I wire up my `LeftRightButtons` component as a `cellRendererFramework` property. I pass `props` to this component using the `cellRendererParams`, these can be any object so I'm passing in the `reorderGrid` callback as the `actionCallBack` property.
+To use a custom component as a Cell Renderer I have to set a cell renderer property. I'm using a cell renderer created in React so I wire up my `LeftRightButtons` component as a `cellRenderer` property. I pass `props` to this component using the `cellRendererParams`, these can be any object so I'm passing in the `reorderGrid` callback as the `actionCallBack` property.
 
-Similarly, I add a header component using the `headerComponentFramework` property. I add hte `ControlButtons` component, and pass in the `checkPuzzleDone` function and `shuffleData` functions as `props` to the component using the `headerComponentParams`.
+Similarly, I add a header component using the `headerComponent` property. I add the `ControlButtons` component, and pass in the `checkPuzzleDone` function and `shuffleData` functions as `props` to the component using the `headerComponentParams`.
 
 All the other columns are similar since they represent the same type of data. This is unusual for a Data Grid, but is a side-effect of it being used as a front end to a game engine.
 
 ```javascript
 {   
     field: 'pos1', 
-    headerComponentFramework: UpDownButtonsHeader, 
+    headerComponent: UpDownButtonsHeader, 
     headerComponentParams:{actionCallBack: reorderGrid},
     cellClass: blankOrNumberTile
 },
@@ -329,7 +328,7 @@ Here the column is mapped to a data value in the `rowData` through the use of th
 
 The remainder of the properties are to wire up the functionality.
 
-The `headerComponentFramework` and `headerComponentParams` are used once again to wire up the custom header, this time the `UpDownButtonsHeader` component is used. In addition the `cellClass` is configured to decide the class name for the cell using the `blankOrNumberTile` function.
+The `headerComponent` and `headerComponentParams` are used once again to wire up the custom header, this time the `UpDownButtonsHeader` component is used. In addition the `cellClass` is configured to decide the class name for the cell using the `blankOrNumberTile` function.
 
 
 The remaining column definitions are the same, the only difference is the `field` that they are wired to:
@@ -337,13 +336,13 @@ The remaining column definitions are the same, the only difference is the `field
 ```javascript
 {   
     field: 'pos2', 
-    headerComponentFramework: UpDownButtonsHeader,
+    headerComponent: UpDownButtonsHeader,
     headerComponentParams:{actionCallBack: reorderGrid},
     cellClass: blankOrNumberTile
 },
 {   
     field: 'pos3', 
-    headerComponentFramework: UpDownButtonsHeader, 
+    headerComponent: UpDownButtonsHeader, 
     headerComponentParams:{actionCallBack: reorderGrid},
     cellClass: blankOrNumberTile
 }
@@ -363,7 +362,6 @@ We are using the `AgGridReact` component which is the React Rendering Engine for
 
     return (
         <AgGridReact 
-            reactUi="true"
             className="ag-theme-alpine"
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
@@ -373,7 +371,7 @@ We are using the `AgGridReact` component which is the React Rendering Engine for
     );
 ```
 
-This has been configured to use the new React rendering engine with `reactUi="true"`, the default grid styling is from AG Grid's theme `ag-theme-alpine`, then the column definitions and row data are added, along with the `rowHeight` in pixels.
+The default grid styling is from AG Grid's theme `ag-theme-alpine`, then the column definitions and row data are added, along with the `rowHeight` in pixels.
 
 When the `rowData` state is updated, the grid will refresh to render the new state of the game tiles.
 
@@ -396,7 +394,7 @@ Most of the styling is supplied by the [AG Grid Theme Engine](https://www.ag-gri
 Because I'm using a theme from AG Grid, the CSS is pretty small:
 
 
-```
+```css
 .header-buttons-outer{
     width: 100%;
     text-align: center;
@@ -448,6 +446,7 @@ Feel free to play around with the code to learn a little more about AG Grid. Som
 - add a counter to the game for number of moves required to solve the game
 
 Or, just play the game and see how well you do.
+
 
 
 ## Getting Started with Create React App
