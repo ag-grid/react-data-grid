@@ -36,17 +36,17 @@ function SpinningRenderer(params) {
 }
 
 function GridExample() {
-  const [reactui, setReactUi] = useState(true);
+  const [suppressReactUi, setSuppressReactUi] = useState(false);
 
   const gridRef = useRef();
 
   const columnDefs = useMemo(
     () => [
-      { field: 'athlete', cellRendererFramework: RenderCounterCellRenderer },
-      { field: 'country', cellRendererFramework: RenderCounterCellRenderer },
-      { field: 'gold', cellRendererFramework: RenderCounterCellRenderer },
-      { field: 'silver', cellRendererFramework: RenderCounterCellRenderer },
-      { field: 'age', cellRendererFramework: SpinningRenderer },
+      { field: 'athlete', cellRenderer: RenderCounterCellRenderer },
+      { field: 'country', cellRenderer: RenderCounterCellRenderer },
+      { field: 'gold', cellRenderer: RenderCounterCellRenderer },
+      { field: 'silver', cellRenderer: RenderCounterCellRenderer },
+      { field: 'age', cellRenderer: SpinningRenderer },
     ],
     []
   );
@@ -82,24 +82,24 @@ function GridExample() {
   });
 
   const disableReactUI = useCallback(() => {
-    setReactUi(false);
+    setSuppressReactUi(true);
   });
 
   const enableReactUI = useCallback(() => {
-    setReactUi(true);
+    setSuppressReactUi(false);
   });
 
   return (
     <div className={'parent-div'}>
       <div className="buttons-div">
-        {reactui && <button onClick={disableReactUI}>Disable React Ui</button>}
-        {!reactui && <button onClick={enableReactUI}>Enable React Ui</button>}
+        {!suppressReactUi && <button onClick={disableReactUI}>Disable React Ui</button>}
+        {suppressReactUi && <button onClick={enableReactUI}>Enable React Ui</button>}
         <button onClick={onClickIncreaseMedals}>Increase Medals</button>
       </div>
       <div className="grid-div">
         <AgGridReact
           // turn on AG Grid React UI
-          reactUi={reactui}
+          suppressReactUi={suppressReactUi}
           // used to access grid API
           ref={gridRef}
           // all other properties as normal...
