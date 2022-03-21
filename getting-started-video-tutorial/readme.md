@@ -3,8 +3,12 @@
 A series of videos showing how to get started with AG Grid and React.
 
 - 001 - QuickStart Guide
+    - https://youtu.be/PyGnASnJgGo    
 - 002 - Enterprise Overview
-- 003 - Customising Cells
+    - https://youtu.be/pKUhYE1VTP4
+- 003 - Customizing Cells
+    - https://youtu.be/9IbhW4z--mg
 - 004 - React Rendering
+    - https://youtu.be/oAQ5vavDupU
 - 005 - React Filters
 - 006 - React Custom Filters

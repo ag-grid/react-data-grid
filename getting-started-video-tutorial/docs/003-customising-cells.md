@@ -5,7 +5,7 @@ Customizing cells using React Cell Renderers, these are simple functions that re
 
 ## Tutorial Video
 
-https://www.youtube.com/watch?v=9IbhW4z--mg
+https://youtu.be/9IbhW4z--mg
 
 00:00 React Components in Cells
 00:27 Create a Cell Renderer Component

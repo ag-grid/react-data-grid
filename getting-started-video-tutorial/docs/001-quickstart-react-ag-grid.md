@@ -7,7 +7,7 @@ In this section you'll learn how to create a project, add AG Grid. You'll unders
 
 This video is a quick start tutorial to getting started with AG Grid in a React project. Niall Crosby, the CEO and creator of AG Grid walks you through the basic knowledge needed to work with AG Grid using React. 
 
-https://www.youtube.com/watch?v=PyGnASnJgGo
+https://youtu.be/PyGnASnJgGo
 
 - 00:00 Create a Project
 - 00:18 Add AG Grid
