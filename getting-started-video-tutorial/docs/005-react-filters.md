@@ -1,5 +1,13 @@
 # React Filters
 
+Columns can be filtered to allow the user to configure the data shown in the grid. Three filters are supplied with AG Grid community edition: text, number and date. An additional set and multi filter are available to the enterprise edition. The filters can also be configured through the API.
+
+https://www.ag-grid.com/react-data-grid/filtering/
+
+## Video Tutorial
+
+https://youtu.be/pebXUHUdlos
+
 00:00 about filters
 00:20 default filters
 00:55 text, number and date filters
@@ -7,6 +15,10 @@
 03:55 filter buttons
 05:45 filtering by dates
 06:30 filter state models
+09:18 floating filters
+10:10 Enterprise filters
+12:43 Filter Menu Container
+13:35 Summary
 
 ## Starting Code
 
@@ -210,3 +222,150 @@ The comparator will work with other filter types, but its most common use case i
                 }
             }
 ```
+
+The comparator receives the value in the filter and the value in the cell.
+
+Because the cell value is not a date, we have code to split the string into parts and convert it into a date for comparison.
+
+Finally the comparator returns an integer to determine if the filter value is greater than, less than or equal to the cell value:
+
+- -1 cell value less than filter value
+- 1 cell value greater than filter value
+- 0 for same value
+
+## Filter State Models
+
+Filter state models are used to set the state of a filter.
+
+We will add two buttons into the returned JSX which will save and apply the state.
+
+```javascript
+      <div>
+        <button onClick={onBtSave}>Save</button>
+        <button onClick={onBtApply}>Apply</button>
+      </div>
+```
+
+Then the implementation for the `onClick` methods will use the grid API to get and set the state.
+
+```javascript
+
+  const savedFilterState = useRef();
+
+  const onBtSave = useCallback( ()=> {
+    const filterModel = gridRef.current.api.getFilterModel();
+    console.log('Saving Filter Model', filterModel);
+    savedFilterState.current = filterModel;
+  }, []);
+
+  const onBtApply = useCallback( ()=> {
+    const filterModel = savedFilterState.current;
+    console.log('Applying Filter Model', filterModel);
+    gridRef.current.api.setFilterModel(filterModel);
+  }, []);
+```
+
+The api calls:
+
+- `getFilterModel` - returns an object representing the current state of the filter
+- `setFilterModel` - sets the current filter using the filter state object
+
+Filter models are described in the documentation:
+
+https://www.ag-grid.com/react-data-grid/filter-api/
+
+The Filter Model could be used to persist the grid state for later application by the user.
+
+The filters can be cleared by setting an empty model e.g.
+
+```javascript
+gridRef.current.api.setFilterModel({})
+```
+
+## Floating Filters
+
+Floating filters are shown in a tool bar under the heading so that the user doesn't have to access the filters from the popup menu.
+
+Floating filters can be configured using column definitions.
+
+Either on a specific set of columns.
+
+```javascript
+    { field: 'athlete', 
+        floatingFilter: true,
+        filter: 'agTextColumnFilter' 
+    },
+
+```
+
+Or on the default column definition:
+
+```javascript
+  const defaultColDef = useMemo( ()=> ( {
+    floatingFilter: true,
+    flex: 1,
+  }), []);
+```
+
+The filter from the popup menu is kept in sync with the floating filter.
+
+Note that setting `floatingFilter: true` on a column would not be enough to create a filter, the actual `filter` property also needs to be set either with default `true` or with a custom or built-in filter e.g. 'agTextColumnFilter'.
+
+## Enterprise Filters
+
+The enterprise edition of AG Grid comes with two additional, very power filters.
+
+- Set Filter
+- Multi Filter
+
+To enable these, the enterprise edition of AG Grid has to be installed, as covered earlier, and we need to import the enterprise modules:
+
+```javascript
+import 'ag-grid-enterprise';
+```
+
+### Set Filter
+
+The Set filter allows the user to filter values using checkboxes to select items from a set of values.
+
+```javascript
+    { field: 'year', filter: 'agSetColumnFilter' },
+```            
+
+The set of values used in the drop down are taken from the values in the column.
+
+In addition to selecting items using the checkboxes it is also possible to use the text box to search for items in the set.
+
+These are documented here:
+
+https://www.ag-grid.com/react-data-grid/filter-set/
+### Multi Filter
+
+The Multi Filter allows multiple filters to be used, by default the Text Filter and Set Filter are shown. It is possible to configure the filters shown using a `filter` array in the `filterParams`.
+
+A default multi filter can be added as a `filter` property on a column or default column definition.
+
+```javascript
+    { field: 'country', filter: 'agMultiColumnFilter' },
+```    
+
+https://www.ag-grid.com/react-data-grid/filter-multi/
+
+## Filter Menu Container
+
+By default the filter menus use the grid as the parent container. This means that if the grid is smaller than the filter menu, the filter menu would be cropped to fit the size of the grid.
+
+When working with a smaller grid, it is possible to configure the parent container for the menu by using the `popupParent` property on the grid.
+
+In the example below, the `document.body` is used as the container so no matter what size the grid is, the menu will always be visible.
+
+```javascript
+    <AgGridReact ref={gridRef}
+        popupParent={document.body}
+        rowData={rowData} animateRows={true} 
+        columnDefs={columnDefs} defaultColDef={defaultColDef}          
+        />
+```
+
+Any element in the DOM could be used, so it could be shown anywhere on the web page to fit the needs of your application design.
+
