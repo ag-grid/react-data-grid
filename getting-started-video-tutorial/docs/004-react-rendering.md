@@ -59,7 +59,6 @@ function App() {
     <div className="ag-theme-alpine" style={{height: '100%'}}>
       <AgGridReact ref={gridRef}
           rowData={rowData} animateRows={true} 
-          enableRangeSelection={true} enableCharts={true}
           columnDefs={columnDefs} defaultColDef={defaultColDef}          
           />
     </div>
