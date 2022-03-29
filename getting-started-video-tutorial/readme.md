@@ -13,3 +13,4 @@ A series of videos showing how to get started with AG Grid and React.
 - 005 - React Filters
     - https://youtu.be/pebXUHUdlos
 - 006 - React Custom Filters
+    - https://youtu.be/yO3_nTyDv6o
