@@ -2,6 +2,12 @@
 
 A series of videos showing how to get started with AG Grid and React.
 
+All videos are available in a playlist:
+
+https://www.youtube.com/playlist?list=PLsZlhayVgqNwHNHeqpCkSgdRV08xrKtzW
+
+And directly available below:
+
 - 001 - QuickStart Guide
     - https://youtu.be/PyGnASnJgGo    
 - 002 - Enterprise Overview

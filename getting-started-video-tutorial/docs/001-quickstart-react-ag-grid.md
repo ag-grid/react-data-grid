@@ -7,23 +7,21 @@ In this section you'll learn how to create a project, add AG Grid. You'll unders
 
 This video is a quick start tutorial to getting started with AG Grid in a React project. Niall Crosby, the CEO and creator of AG Grid walks you through the basic knowledge needed to work with AG Grid using React. 
 
-https://youtu.be/PyGnASnJgGo
+https://youtu.be/Pr__B6HM_s4
 
 - 00:00 Create a Project
-- 00:18 Add AG Grid
 - 00:30 Get Started
-- 00:46 Create an AG Grid
-- 02:00 CSS Includes Explained
-- 02:33 Adding data to the grid
-- 03:20 Using React State for data
-- 03:52 Loading data from server with useEffect
-- 04:32 Sorting and Filtering Columns
-- 05:00 Default Column Definitions
-- 05:50 Grid properties to animate and select rows
-- 06:28 hooking into Grid Events
-- 07:15 using the Grid API
-- 08:18 Summary
-- 08:38 Outro
+- 01:05 Create an AG Grid
+- 02:05 CSS Includes Explained
+- 03:11 Using React State
+- 03:29 Loading data from server with useEffect
+- 03:55 Sorting and Filtering Columns
+- 04:35 Default Column Definitions
+- 04:55 Grid properties to animate and select rows
+- 05:33 hooking into Grid Events
+- 06:00 using the Grid API
+- 06:42 Summary
+- 07:03 Outro
 
 ## Create a Project
 
