@@ -20,3 +20,5 @@ And directly available below:
     - https://youtu.be/pebXUHUdlos
 - 006 - React Custom Filters
     - https://youtu.be/yO3_nTyDv6o
+- 007 - React Custom Floating Filters
+    - https://youtu.be/CxwfX4KodaM    
