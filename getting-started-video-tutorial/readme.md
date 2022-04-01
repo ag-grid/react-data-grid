@@ -21,4 +21,8 @@ And directly available below:
 - 006 - React Custom Filters
     - https://youtu.be/yO3_nTyDv6o
 - 007 - React Custom Floating Filters
-    - https://youtu.be/CxwfX4KodaM    
+    - https://youtu.be/CxwfX4KodaM
+- 008 - React Components
+    - https://youtu.be/eglfpHRpcu0
+- 009 - Updating Row Data
+    - https://youtu.be/_V5qFr62uhY
