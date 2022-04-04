@@ -15,5 +15,7 @@ cat newpage.md >> react-tutorial.md
 cat 007-react-custom-floating-filters.md >> react-tutorial.md
 cat newpage.md >> react-tutorial.md
 cat 008-react-components.md >> react-tutorial.md
+cat newpage.md >> react-tutorial.md
+cat 009-react-components.md >> react-tutorial.md
 pandoc react-tutorial.md -o react-tutorial-workbook.pdf --from markdown --template eisvogel --listings --toc
 open react-tutorial-workbook.pdf
