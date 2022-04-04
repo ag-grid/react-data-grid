@@ -9,7 +9,7 @@ https://www.youtube.com/playlist?list=PLsZlhayVgqNwHNHeqpCkSgdRV08xrKtzW
 And directly available below:
 
 - 001 - QuickStart Guide
-    - https://youtu.be/PyGnASnJgGo    
+    - https://youtu.be/Pr__B6HM_s4 
 - 002 - Enterprise Overview
     - https://youtu.be/pKUhYE1VTP4
 - 003 - Customizing Cells
@@ -26,3 +26,7 @@ And directly available below:
     - https://youtu.be/eglfpHRpcu0
 - 009 - Updating Row Data
     - https://youtu.be/_V5qFr62uhY
+
+Source code for all videos is available on Github:
+
+https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial

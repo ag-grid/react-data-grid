@@ -1,5 +1,7 @@
 let sequence = 0;
-let carTypes = ['Mazda MX5','BMW M3','Porsche 911','Mercedes S-Class','Aston Martin DBX','Bentley Bentayga'];
+let carTypes = ['Mazda MX5','BMW M3','Porsche 911',
+                'Mercedes S-Class','Aston Martin DBX',
+                'Bentley Bentayga'];
 let colors = ['Red','Blue','Green','White','Black'];
 
 export function createOneCarRecord() {
