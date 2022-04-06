@@ -15,6 +15,13 @@ https://youtu.be/pKUhYE1VTP4
 - 03:13 Enterprise Features Listed
 - 03:33 Enterprise License
 
+## Source Code For This Section
+
+The source code for this section is available in Github in the 'react-data-grid' repo and the subfolder `getting-started-video-tutorial/src/002-enterprise-overview`:
+
+- https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial/src/002-enterprise-overview
+
+
 ## Starting Code
 
 A basic project which setups a grid and loads data from a json file on the server.

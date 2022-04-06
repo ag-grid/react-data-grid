@@ -21,6 +21,13 @@ https://youtu.be/pebXUHUdlos
 12:43 Filter Menu Container
 13:35 Summary
 
+## Source Code For This Section
+
+The source code for this section is available in Github in the 'react-data-grid' repo and the subfolder `getting-started-video-tutorial/src/005-react-filters`:
+
+- https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial/src/005-react-filters
+
+
 ## Starting Code
 
 Our starting point is a simple app which renders data from a server side JSON file in a grid.

@@ -17,6 +17,15 @@ https://youtu.be/9IbhW4z--mg
 05:38 Cell Renderer Selector
 07:00 Summary
 
+
+## Source Code For This Section
+
+The source code for this section is available in Github in the 'react-data-grid' repo and the subfolder `getting-started-video-tutorial/src/003-customizing-cells`:
+
+- https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial/src/003-customizing-cells
+
+
+
 ## Starting Code
 
 The starting code uses a variant of the olympic winners code from the Enterprise Quickstart, with the enterprise features removed.

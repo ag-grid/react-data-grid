@@ -21,6 +21,12 @@ https://youtu.be/CxwfX4KodaM
 10:06 Re-using Floating Filters
 10:30 Summary
 
+## Source Code For This Section
+
+The source code for this section is available in Github in the 'react-data-grid' repo and the subfolder `getting-started-video-tutorial/src/007-react-custom-floating-filters`:
+
+- https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial/src/007-react-custom-floating-filters
+
 ## Starting Code
 
 The code we are starting from has a basic data grid that reads data from a server, as shown in `App.js` below:

@@ -18,6 +18,12 @@ https://youtu.be/_V5qFr62uhY
 13:12 High Frequency Updates
 18:16 Summary
 
+## Source Code For This Section
+
+The source code for this section is available in Github in the 'react-data-grid' repo and the subfolder `getting-started-video-tutorial/src/009-updating-row-data`:
+
+- https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial/src/009-updating-row-data
+
 ## Starting Code
 
 ### App.js

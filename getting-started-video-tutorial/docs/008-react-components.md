@@ -22,6 +22,11 @@ https://youtu.be/eglfpHRpcu0
 12:24 Enterprise components
 14:25 Summary
 
+## Source Code For This Section
+
+The source code for this section is available in Github in the 'react-data-grid' repo and the subfolder `getting-started-video-tutorial/src/008-react-components`:
+
+- https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial/src/008-react-components
 
 ## Starting Code
 

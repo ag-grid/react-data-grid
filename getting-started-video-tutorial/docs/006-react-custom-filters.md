@@ -25,6 +25,12 @@ https://youtu.be/yO3_nTyDv6o
 15:31 App calling filter
 17:10 Summary
 
+## Source Code For This Section
+
+The source code for this section is available in Github in the 'react-data-grid' repo and the subfolder `getting-started-video-tutorial/src/006-react-custom-filters`:
+
+- https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial/src/006-react-custom-filters
+
 ## Starting Point
 
 The starting code is a simple grid which renders data from a server, as shown by the `App.js` below:

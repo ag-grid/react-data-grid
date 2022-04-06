@@ -14,6 +14,13 @@ https://youtu.be/oAQ5vavDupU
 03:00 Avoiding Waster Renders with memo
 03:28 Summary
 
+## Source Code For This Section
+
+The source code for this section is available in Github in the 'react-data-grid' repo and the subfolder `getting-started-video-tutorial/src/004-react-rendering`:
+
+- https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial/src/004-react-rendering
+
+
 ## Starting Code
 
 Our starting point is a simple app which renders data from a server side JSON file in a grid.

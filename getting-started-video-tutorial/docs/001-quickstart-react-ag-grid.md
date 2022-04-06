@@ -23,6 +23,13 @@ https://youtu.be/Pr__B6HM_s4
 - 06:42 Summary
 - 07:03 Outro
 
+## Source Code For This Section
+
+The source code for this section is available in Github in the 'react-data-grid' repo and the subfolder `getting-started-video-tutorial/src/001-quickstart-guide/`:
+
+- https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial/src/001-quickstart-guide
+
+
 ## Create a Project
 
 Create a project:
