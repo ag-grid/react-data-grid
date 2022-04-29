@@ -64,10 +64,10 @@ export function PodcastGrid(props) {
           headerName: 'Episode',
           field: 'mp3',
           flex: 1,
-          cellRenderer: ((params)=>`<audio controls preload="none" 
-                                        style="height:2em; vertical-align: middle;">
-                                        <source src=${params.value} type="audio/mpeg" />
-                                    </audio>`),
+          cellRenderer: (params => <audio controls preload="none" 
+                                      style={{height:"2em", verticalAlign: "middle"}}>
+                                      <source src={params.value} type="audio/mpeg" />
+                                  </audio>),
         }
       ];
 
@@ -84,7 +84,6 @@ export function PodcastGrid(props) {
     return (
        <div className="ag-theme-alpine" style={{height: props.height, width: props.width}}>   
            <AgGridReact
-                reactUI="true"
                 onGridReady={onGridReady}
                 rowData={rowData}
                 columnDefs ={columnDefs}
