@@ -20,6 +20,8 @@ cat 008-react-components.md >> react-tutorial.md
 cat newpage.md >> react-tutorial.md
 cat 009-updating-row-data.md >> react-tutorial.md
 cat newpage.md >> react-tutorial.md
+cat 010-react-columns.md >> react-tutorial.md
+cat newpage.md >> react-tutorial.md
 cat 999-outro.md >> react-tutorial.md
 pandoc react-tutorial.md -o react-tutorial-workbook.pdf --from markdown --template eisvogel --listings --toc
 open react-tutorial-workbook.pdf

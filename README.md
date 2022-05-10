@@ -34,6 +34,43 @@ See the Posts:
 
 Feel free to [clone, fork or download this repo](https://github.com/ag-grid/react-data-grid) to use as a base for learning about [AG Grid](https://ag-grid.com/).
 
+## Video Tutorials
+
+We have created a series of Video Tutorials which can be found on YouTube.
+
+All videos are available in a [playlist](https://www.youtube.com/playlist?list=PLsZlhayVgqNwHNHeqpCkSgdRV08xrKtzW):
+
+And directly available below:
+
+- 001 - QuickStart Guide
+    - https://youtu.be/Pr__B6HM_s4 
+- 002 - Enterprise Overview
+    - https://youtu.be/pKUhYE1VTP4
+- 003 - Customizing Cells
+    - https://youtu.be/9IbhW4z--mg
+- 004 - React Rendering
+    - https://youtu.be/oAQ5vavDupU
+- 005 - React Filters
+    - https://youtu.be/pebXUHUdlos
+- 006 - React Custom Filters
+    - https://youtu.be/yO3_nTyDv6o
+- 007 - React Custom Floating Filters
+    - https://youtu.be/CxwfX4KodaM
+- 008 - React Components
+    - https://youtu.be/eglfpHRpcu0
+- 009 - Updating Row Data
+    - https://youtu.be/_V5qFr62uhY
+- 010 - Configuring Columns
+    - https://youtu.be/aDCepyF_DUY
+
+Source code for all videos is available on [Github](https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial):
+
+There are also tutorial write ups which support following the videos:
+
+https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial/docs
+
+
+
 ## More Examples
 
 In addition to this repo, we also have a repo used to support our testing as well as provide example use cases:

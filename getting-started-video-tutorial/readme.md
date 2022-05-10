@@ -26,6 +26,8 @@ And directly available below:
     - https://youtu.be/eglfpHRpcu0
 - 009 - Updating Row Data
     - https://youtu.be/_V5qFr62uhY
+- 010 - Configuring Columns
+    - https://youtu.be/aDCepyF_DUY
 
 Source code for all videos is available on Github:
 

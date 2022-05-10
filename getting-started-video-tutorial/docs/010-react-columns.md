@@ -7,23 +7,23 @@ In this section we will take a deep dive into Column Definitions showing various
 
 https://youtu.be/aDCepyF_DUY
 
-00:00 Starting Code
-00:20 Column Headers
-00:52 Resizing
-01:05 Default Column Definition
-01:32 Column Width
-03:35 Sorting and Editing
-04:11 Field property
-04:28 Value Getters
-05:46 Value Formatters
-06:49 Pinning Columns
-08:53 Lock Position
-09:17 Hiding Columns
-09:48 Tooltips
-10:44 Column Groups
-13:42 Column API
-18:59 Column Ids
-21:32 State vs API Usage
+- 00:00 Starting Code
+- 00:20 Column Headers
+- 00:52 Resizing
+- 01:05 Default Column Definition
+- 01:32 Column Width
+- 03:35 Sorting and Editing
+- 04:11 Field property
+- 04:28 Value Getters
+- 05:46 Value Formatters
+- 06:49 Pinning Columns
+- 08:53 Lock Position
+- 09:17 Hiding Columns
+- 09:48 Tooltips
+- 10:44 Column Groups
+- 13:42 Column API
+- 18:59 Column Ids
+- 21:32 State vs API Usage
 
 ## Starting Code
 
@@ -180,8 +180,6 @@ By removing `width`, `minWidth` and `maxWidth` from any columns then setting the
 ```
 
 The `flex` is a weighting value, so `2` would mean 'double the size' of other columns.
-
-e.g.
 
 e.g.
 
