@@ -62,6 +62,8 @@ And directly available below:
     - https://youtu.be/_V5qFr62uhY
 - 010 - Configuring Columns
     - https://youtu.be/aDCepyF_DUY
+- 011 - Column State in React
+    - https://youtu.be/d9Kohpbt42M    
 
 Source code for all videos is available on [Github](https://github.com/ag-grid/react-data-grid/tree/main/getting-started-video-tutorial):
 
