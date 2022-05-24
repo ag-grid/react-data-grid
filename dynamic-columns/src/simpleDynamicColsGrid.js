@@ -5,27 +5,24 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 
-export function DynamicColsGrid() {
+export function SimpleDynamicColsGrid() {
 
     // set to default data
     const [rowData, setRowData] = useState();
     const [colDefs, setColDefs] = useState([]);
 
-    const url = 'https://swapi.dev/api/people/';
+    const url = 'https://hp-api.herokuapp.com/api/characters';
+    //const url = 'https://www.ag-grid.com/example-assets/row-data.json';
 
-    // swapi.dev requires a little extra processing to process the response since it needs a content type header
-    // and the json is an object but we are only interested in the results array in the object.
+    // this is a simple fetch that returns a set of results in json array
     React.useEffect(() => {
-        fetch(url,{ 
-                method: 'GET',
-                headers: {'Content-Type': 'application/json'}
-            })
+        fetch(url)
             .then(result => result.json())
             .then(data =>{
-                const keys = Object.keys(data.results[0])
+                const keys = Object.keys(data[0])
                 let jsonColDefs = keys.map(key =>{ return {field : key};});
                 setColDefs(jsonColDefs)
-                setRowData(data.results)
+                setRowData(data)
             } )
     }, []);
 
