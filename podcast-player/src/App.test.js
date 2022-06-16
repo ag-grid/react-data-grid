@@ -2,11 +2,13 @@ import { render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 import userEvent from '@testing-library/user-event'
 import * as AgGridTest from "./AgGridTestUtils"
+import preview from 'jest-preview'
 
 test('renders the app', () => {
   render(<App />);
   const headerElement = screen.getByText(/Podcast Player/i);
   expect(headerElement).toBeInTheDocument();
+  preview.debug()
 });
 
 it("shows default value text feed url field", async () => {
@@ -15,6 +17,7 @@ it("shows default value text feed url field", async () => {
   const feedUrl = screen.getByLabelText("RSS Feed URL:");
   expect(feedUrl).toBeInTheDocument();
   expect(feedUrl.value).toEqual("https://feeds.simplecast.com/tOjNXec5");
+  preview.debug();
 });
 
 it("shows default value in select", async () => {
@@ -23,6 +26,7 @@ it("shows default value in select", async () => {
   const select = screen.getByLabelText("Choose a podcast:");
   expect(select).toBeInTheDocument();
   expect(select.options[select.selectedIndex].text).toEqual("WebRush");
+  preview.debug();
 });
 
 
@@ -34,6 +38,7 @@ it("changes url in feed when select chosen", async () => {
 
   const displayedFeedUrl = screen.getByLabelText("RSS Feed URL:");
   expect(displayedFeedUrl.value).toEqual("https://feed.pod.co/the-evil-tester-show");
+  preview.debug();
 });
 
 it("has no selected option when url in feed does not match a select because the first will be shown", async () => {
@@ -49,6 +54,7 @@ it("has no selected option when url in feed does not match a select because the 
   userEvent.type(displayedFeedUrl, 'Hello')
   expect(select.options[select.selectedIndex].text).toEqual("WebRush");
   expect(displayedFeedUrl.value).toContain("Hello");
+  preview.debug();
 });
 
 const fakeEvilFeed = 
@@ -106,4 +112,5 @@ it("loads feed into grid when button pressed", async () => {
 
   // remove the mock to ensure tests are completely isolated
   global.fetch.mockRestore();
+  preview.debug();
 });

@@ -8,6 +8,7 @@
     "@testing-library/react": "^11.2.7",
     "ag-grid-community": "^27.2.0",
     "ag-grid-react": "^27.2.0",
+    "jest-preview": "^0.2.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
@@ -17,7 +18,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "jest-preview": "jest-preview"
   },
   "eslintConfig": {
     "extends": [
