@@ -17,7 +17,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "node scripts/test.js",
     "eject": "react-scripts eject",
     "jest-preview": "jest-preview"
   },
