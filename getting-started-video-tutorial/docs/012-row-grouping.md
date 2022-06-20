@@ -29,8 +29,6 @@ https://youtu.be/kM0RFOoPDXk
 17:46 Grouping with Side Bar Panel
 20:20 Outro
 
-## Starting Code
-
 
 
 ## Summary
