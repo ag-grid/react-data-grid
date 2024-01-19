@@ -1,42 +1,30 @@
 import './App.css';
-
-import {AgGridReact} from 'ag-grid-react';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';import {AgGridReact} from 'ag-grid-react';
 import {useState, useRef, useEffect, useMemo, useCallback} from 'react';
-
-import ValuesFilter from './valuesFilter';
-import ValuesFloatingFilter from './valuesFloatingFilter';
+import MyFilter from './MyFilter';
+import MyFloatingFilter from './MyFloatingFilter';
 
 function App() {
 
+  const gridRef = useRef();
   const [rowData, setRowData] = useState();
-  const [columnDefs, setColumnDefs] = useState([
-        { field: 'athlete' },
-        { field: 'year', 
-              filter: ValuesFilter,
-              filterParams: {
-                values: [2000,2004]
-              },
-              floatingFilter: true,
-              floatingFilterComponent: ValuesFloatingFilter
-          },
-        { field: 'age', 
-              filter: ValuesFilter,
-              filterParams: {
-                values: [18, 19]
-              },
-              floatingFilter: true,
-              floatingFilterComponent: ValuesFloatingFilter
-          },
-        { field: 'country' },
-        { field: 'date' },
-        { field: 'sport' },
-        { field: 'gold' },
-        { field: 'silver' },
-        { field: 'bronze' },
-        { field: 'total' }
+  const [columnDefs] = useState([
+    { field: 'athlete' },
+    { 
+        field: 'year', 
+        filter: MyFilter,
+        floatingFilter: true,
+        floatingFilterComponent: MyFloatingFilter
+    },
+    { field: 'age' },
+    { field: 'country' },
+    { field: 'date' },
+    { field: 'sport' },
+    { field: 'gold' },
+    { field: 'silver' },
+    { field: 'bronze' },
+    { field: 'total' }
   ]);
 
   useEffect(() => {
@@ -46,9 +34,14 @@ function App() {
   }, []);
 
   return (
-    <div className="ag-theme-alpine" style={{height: '100%'}}>
-      <AgGridReact rowData={rowData} columnDefs={columnDefs}
-          animateRows={true}/>
+    <div className="ag-theme-quartz" style={{height: '100%'}}>
+      <div style={{height: '100%'}}>
+        <AgGridReact 
+            reactiveCustomComponents
+            rowData={rowData} columnDefs={columnDefs}
+            ref={gridRef} animateRows={true}             
+            />
+      </div>
     </div>
   );
 }

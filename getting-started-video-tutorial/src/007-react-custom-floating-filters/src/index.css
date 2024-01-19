@@ -11,3 +11,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.MyFilter {
+  padding: 10px
+}
+
+.MyFilter > input {
+  margin-left: 6px
+}
+
+.MyFloatingFilter {
+  padding: 10px
+}
+
+.MyFloatingFilter > input {
+  width: 100%
+}

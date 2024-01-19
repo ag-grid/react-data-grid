@@ -13,6 +13,18 @@
   }
 }
 
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -35,18 +47,4 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-.filter-title {
-  font-weight: bold;
-  margin: 4px;
-}
-
-.filter-state {
-  font-weight: bold;
-  margin: 4px;
-}
-
-.filter-entry {
-  margin: 4px;
 }
