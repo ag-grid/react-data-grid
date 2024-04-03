@@ -1,4 +1,12 @@
-# Getting Started with Create React App
+# Quick Start
+
+***NOTE: The source code included in this repo is for our [legacy Quick Start video](https://www.youtube.com/watch?v=Pr__B6HM_s4) and contains out-dated code***
+
+The Quick Start code used in our latest [video tutorial](https://www.youtube.com/watch?v=6hxbPqziELk) is aligned to the code in our [Quick Start docs](https://www.ag-grid.com/react-data-grid/getting-started/).
+
+---
+
+## Building this project
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
